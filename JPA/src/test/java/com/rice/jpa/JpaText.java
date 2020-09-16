@@ -142,7 +142,7 @@ public class JpaText {
         tx.begin();
         //4.完成增删改查操作：保存一个客户到数据库中
         Customer customer = new Customer();
-        customer.setCustName("王岩");
+        customer.setCustName("李明");
         customer.setCustIndustry("IT");
         //保存操作
         em.persist(customer);
