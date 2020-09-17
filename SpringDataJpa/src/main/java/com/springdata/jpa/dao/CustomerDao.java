@@ -24,7 +24,7 @@ public interface CustomerDao extends JpaRepository<Customer,Long> ,JpaSpecificat
      *
      *  配置jpql语句，使用的@Query注解
      */
-    @Query(value="from Customer where custName = ?")
+    @Query(value="from Customer where custName = ?1")
     Customer findJpql(String custName);
 
 
