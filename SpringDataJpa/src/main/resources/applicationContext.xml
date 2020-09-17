@@ -16,7 +16,7 @@
     <!--spring 和 spring data jpa的配置-->
 
     <!-- 1.创建entityManagerFactory对象交给spring容器管理-->
-    <bean id="entityManagerFactoty" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <!--配置的扫描的包（实体类所在的包） -->
         <property name="packagesToScan" value="com.springdata.jpa.entity" />
@@ -56,11 +56,11 @@
 
     <!--3.整合spring dataJpa-->
     <jpa:repositories base-package="com.springdata.jpa.dao" transaction-manager-ref="transactionManager"
-                   entity-manager-factory-ref="entityManagerFactoty" ></jpa:repositories>
+                   entity-manager-factory-ref="entityManagerFactory" ></jpa:repositories>
 
     <!--4.配置事务管理器 -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactoty"></property>
+        <property name="entityManagerFactory" ref="entityManagerFactory"></property>
     </bean>
 
     <!-- 4.txAdvice-->
