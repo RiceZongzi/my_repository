@@ -44,7 +44,6 @@ public interface CustomerDao extends JpaRepository<Customer,Long> ,JpaSpecificat
     /**
      * 使用jpql完成更新操作
      *      案例 ： 根据id更新，客户的名称
-     *          更新4号客户的名称，将名称改为“黑马程序员”
      *
      *  sql  ：update cst_customer set cust_name = ? where cust_id = ?
      *  jpql : update Customer set custName = ? where custId = ?
@@ -100,6 +99,10 @@ public interface CustomerDao extends JpaRepository<Customer,Long> ,JpaSpecificat
 
 
     List<Customer> findByCustNameLike(String custName);
+
+    List<Customer> findByCustPhoneIsNotNull();
+
+    List<Customer> findByCustPhoneIsNull();
 
     //使用客户名称模糊匹配和客户所属行业精准匹配的查询
     Customer findByCustNameLikeAndCustIndustry(String custName, String custIndustry);
