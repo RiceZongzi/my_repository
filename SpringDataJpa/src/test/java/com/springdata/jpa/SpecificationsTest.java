@@ -25,7 +25,7 @@ import javax.persistence.criteria.Predicate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
-public class SpecificationsTest extends Thread{
+public class SpecificationsTest {
 
     @Autowired
     private CustomerDao customerDao;
