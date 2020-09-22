@@ -84,6 +84,9 @@ public class Customer {
     *                  MERGE       ：更新
     *                  PERSIST     ：保存
     *                  REMOVE      ：删除
+    * fetch : 配置关联对象的加载方式
+    *          EAGER   ：立即加载
+    *          LAZY    ：延迟加载
     */
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<LinkMan> linkMans = new HashSet<>();
