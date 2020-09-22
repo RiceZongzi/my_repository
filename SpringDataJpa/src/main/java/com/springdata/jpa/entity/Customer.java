@@ -73,8 +73,14 @@ public class Customer {
      *  * 在客户实体类上（一的一方）添加了外键了配置，所以对于客户而言，也具备了维护外键的作用
      *
      */
-    @OneToMany(targetEntity = LinkMan.class)
-    @JoinColumn(name = "lkm_cust_id", referencedColumnName = "cust_id")
+//    @OneToMany(targetEntity = LinkMan.class)
+//    @JoinColumn(name = "lkm_cust_id", referencedColumnName = "cust_id")
+   /**
+    * 在一的一方放弃外键维护权
+    * 放弃外键维护权
+    *      mappedBy：对方配置关系的属性名称
+    */
+    @OneToMany(mappedBy = "customer")
     private Set<LinkMan> linkMans = new HashSet<>();
 
     public Set<LinkMan> getLinkMans() {

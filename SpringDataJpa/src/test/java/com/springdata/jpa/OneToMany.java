@@ -29,6 +29,13 @@ public class OneToMany {
     @Autowired
     private LinkManDao linkManDao;
 
+    /**
+     * 会有一条多余的update语句
+     *      * 由于一的一方可以维护外键：会发送update语句
+     *      * 解决此问题：只需要在一的一方放弃维护权即可
+     *
+     */
+
     @Test
     @Transactional
     @Rollback(value = false)
@@ -39,7 +46,33 @@ public class OneToMany {
         customer.setCustName("Valve");
         linkMan.setLkmName("Gabe");
 
+        /*
+         * 配置了客户到联系人的关系
+         *      从客户的角度上：发送两条insert语句，发送一条更新语句更新数据库（更新外键）
+         * 由于我们配置了客户到联系人的关系：客户可以对外键进行维护
+         */
         customer.getLinkMans().add(linkMan);
+
+        customerDao.save(customer);
+        linkManDao.save(linkMan);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    public void testAdd1(){
+        Customer customer = new Customer();
+        LinkMan linkMan = new LinkMan();
+
+        customer.setCustName("Valve");
+        linkMan.setLkmName("Gabe");
+
+        /*
+         * 配置联系人到客户的关系（多对一）
+         *    只发送了两条insert语句
+         * 由于配置了联系人到客户的映射关系（多对一）
+         */
+        linkMan.setCustomer(customer);
 
         customerDao.save(customer);
         linkManDao.save(linkMan);
