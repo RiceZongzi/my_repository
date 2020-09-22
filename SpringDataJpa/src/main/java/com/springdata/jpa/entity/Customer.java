@@ -79,8 +79,13 @@ public class Customer {
     * 在一的一方放弃外键维护权
     * 放弃外键维护权
     *      mappedBy：对方配置关系的属性名称
+    * cascade : 配置级联（可以配置到设置多表的映射关系的注解上）
+    *      CascadeType.ALL         : 所有
+    *                  MERGE       ：更新
+    *                  PERSIST     ：保存
+    *                  REMOVE      ：删除
     */
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<LinkMan> linkMans = new HashSet<>();
 
     public Set<LinkMan> getLinkMans() {

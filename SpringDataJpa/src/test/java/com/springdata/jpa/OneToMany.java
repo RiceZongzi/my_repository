@@ -77,4 +77,38 @@ public class OneToMany {
         customerDao.save(customer);
         linkManDao.save(linkMan);
     }
+
+    /**
+     * 级联添加：保存一个客户的同时，保存客户的所有联系人
+     *      需要在操作主体的实体类上，配置casacde属性
+     */
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testCascadeAdd() {
+        Customer customer = new Customer();
+        customer.setCustName("MicroSoft");
+
+        LinkMan linkMan = new LinkMan();
+        linkMan.setLkmName("Bill");
+
+        linkMan.setCustomer(customer);
+        customer.getLinkMans().add(linkMan);
+
+        customerDao.save(customer);
+    }
+
+    /**
+     * 级联删除：
+     *      删除1号客户的同时，删除1号客户的所有联系人
+     */
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testCascadeRemove() {
+        //1.查询1号客户
+        Customer customer = customerDao.findOne(1L);
+        //2.删除1号客户
+        customerDao.delete(customer);
+    }
 }
