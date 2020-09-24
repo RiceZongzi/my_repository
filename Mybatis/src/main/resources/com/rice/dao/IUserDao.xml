@@ -7,4 +7,33 @@
     <select id="findAll" resultType="com.rice.entity.User">
         select * from user
     </select>
+
+    <!--保存用户-->
+    <insert id="saveUser" parameterType="com.rice.entity.User">
+        insert into user(username, address, sex, birthday)
+        values (#{username}, #{address}, #{sex}, #{birthday});
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="com.rice.entity.User">
+        update user set username=#{userName},address=#{userAddress},sex=#{userAex},birthday=#{userBirthday}
+        where id=#{userId}
+    </update>
+
+    <!-- 删除用户-->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user
+        where id = #{uid}
+    </delete>
+
+    <!-- 根据id查询用户 -->
+    <select id="findById" parameterType="INT" resultType="com.rice.entity.User">
+        select * from user
+        where id = #{uid}
+    </select>
+
+    <!-- 根据名称模糊查询 -->
+    <select id="findByName" parameterType="string" resultType="com.rice.entity.User">
+        select * from user where username like #{name}
+    </select>
 </mapper>
