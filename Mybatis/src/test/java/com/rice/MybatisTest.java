@@ -1,6 +1,7 @@
 package com.rice;
 
 import com.rice.dao.IUserDao;
+import com.rice.entity.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.Date;
 
 public class MybatisTest {
 
@@ -43,5 +45,15 @@ public class MybatisTest {
     @Test
     public void testFindAll() throws Exception {
         userDao.findAll().forEach(user -> System.out.println(user));
+    }
+
+    @Test
+    public void testSave(){
+        User user = new User();
+        user.setUsername("玛吉纳");
+        user.setSex("男");
+        user.setAddress("曙光酒馆");
+        user.setBirthday(new Date());
+        userDao.saveUser(user);
     }
 }
