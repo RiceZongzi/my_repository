@@ -98,4 +98,33 @@ public class JedisTest {
         // 再次遍历，应该为baab
         this.testRangeList();
     }
+
+    @Test
+    public void testSaddSet(){
+        // 2. 操作
+        jedis.sadd("myset", "Java","Python","JavaScript");
+    }
+
+    @Test
+    public void testSmembersSet(){
+        // 2. 操作
+        Set<String> myset = jedis.smembers("myset");
+        System.out.println(myset);
+    }
+
+    @Test
+    public void testZrangeSet(){
+        // 2. 操作
+        jedis.zadd("NationalArea", 1710, "Russia");
+        jedis.zadd("NationalArea", 998, "Canada");
+        jedis.zadd("NationalArea", 960, "PRC");
+        jedis.zadd("NationalArea", 937, "USA");
+    }
+
+    @Test
+    public void testZaddSet(){
+        // 2. 操作
+        Set<String> nationalArea = jedis.zrange("NationalArea", 0, -1);
+        System.out.println(nationalArea);
+    }
 }
