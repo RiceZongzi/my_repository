@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,5 +67,35 @@ public class JedisTest {
         // 单独打印
         Set<String> keySet = user.keySet();
         keySet.forEach(s -> System.out.println(s + "=" + user.get(s)));
+    }
+
+    @Test
+    public void testPushList(){
+        // 2. 操作
+        // 从左边存
+        jedis.lpush("mylist", "a","b","c");
+        // 从右边存
+        jedis.rpush("mylist", "a","b","c");
+        // 实际的保存顺序应该为cbaabc
+    }
+
+    @Test
+    public void testRangeList(){
+        // 2. 操作
+        // 范围获取，
+        List<String> mylist = jedis.lrange("mylist", 0, -1);
+        // 遍历打印
+        System.out.println(mylist);
+    }
+
+    @Test
+    public void testPopList(){
+        // 2. 操作
+        // 从左侧弹出
+        System.out.println(jedis.lpop("mylist"));
+        // 从右侧弹出
+        System.out.println(jedis.rpop("mylist"));
+        // 再次遍历，应该为baab
+        this.testRangeList();
     }
 }
