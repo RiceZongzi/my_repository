@@ -1,5 +1,7 @@
 package com.rice.jedis.test;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 
@@ -11,13 +13,23 @@ import redis.clients.jedis.Jedis;
  */
 public class JedisTest {
 
-    @Test
-    public void test1(){
+    private Jedis jedis;
+
+    @Before
+    public void init()throws Exception{
         //1. 获取连接
-        Jedis jedis = new Jedis("localhost",6379);
-        //2. 操作
-        jedis.set("address","Peking");
+        jedis = new Jedis("localhost",6379);
+    }
+
+    @After
+    public void destroy()throws Exception{
         //3. 关闭连接
         jedis.close();
+    }
+
+    @Test
+    public void test1(){
+        //2. 操作
+        jedis.set("address","Peking");
     }
 }
