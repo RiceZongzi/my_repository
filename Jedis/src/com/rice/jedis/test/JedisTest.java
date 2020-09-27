@@ -28,8 +28,14 @@ public class JedisTest {
     }
 
     @Test
-    public void test1(){
+    public void testSetString(){
         //2. 操作
         jedis.set("address","Peking");
+    }
+
+    @Test
+    public void testGetString(){
+        //2. 操作
+        System.out.println(jedis.get("address"));
     }
 }
