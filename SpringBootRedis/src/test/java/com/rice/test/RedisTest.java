@@ -48,4 +48,9 @@ public class RedisTest {
         // 5、将数据在控制台打印
         System.out.println(userListJson);
     }
+
+    @Test
+    public void testRedis() {
+        System.out.println(redisTemplate.boundValueOps("Zhangtie").get());
+    }
 }
