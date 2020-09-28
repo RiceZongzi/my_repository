@@ -31,6 +31,7 @@ public class RedisTemplateTest {
     @Test
     public void testRedis() {
 //        Invalid UTF-8 start byte 0x98
+//        不是问题
 //        System.out.println(redisUtil.get("Zhangtie"));
         System.out.println(stringRedisTemplate.opsForValue().get("Zhangtie"));
     }
