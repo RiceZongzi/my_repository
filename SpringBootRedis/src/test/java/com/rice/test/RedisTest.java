@@ -51,6 +51,9 @@ public class RedisTest {
 
     @Test
     public void testRedis() {
+//        嘿嘿大魔王
         System.out.println(redisTemplate.boundValueOps("Zhangtie").get());
+//        "嘿嘿大魔王"
+        System.out.println(redisTemplate.boundValueOps("PMZhang").get());
     }
 }
