@@ -11,11 +11,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Set;
+
 /**
- * @Author ：by wgz
- * @description：
- * @Date ：Created in 2020/9/28 10:00
- * @Version: $
+ * @author   wgz
+ * @date     2020/9/28 10:00
+ * @version  1.0
  */
 
 @RunWith(SpringRunner.class)
@@ -41,6 +42,14 @@ public class RedisTemplateTest {
         redisUtil.select(1);
         redisUtil.set("PMZhang", "嘿嘿大魔王");
         System.out.println(redisUtil.get("PMZhang"));
+
+        redisUtil.zAdd("NationalArea", "Russia", 1710);
+        redisUtil.zAdd("NationalArea", "Canada", 998);
+        redisUtil.zAdd("NationalArea", "PRC", 960);
+        redisUtil.zAdd("NationalArea", "USA", 937);
+
+        Set<Object> nationalArea = redisUtil.zRange("NationalArea", 0, -1);
+        nationalArea.forEach(o -> System.out.println(o));
     }
 
 }
