@@ -216,6 +216,59 @@ public final class RedisUtil {
     public Boolean move(String key, int dbIndex) {
         return redisTemplate.move(key, dbIndex);
     }
+
+    /**
+     * 开启事务
+     * @author wgz
+     * @date 2020/9/28
+     */
+    public void multi() {
+        redisTemplate.multi();
+    }
+
+    /**
+     * 关闭事务
+     * @author wgz
+     * @date 2020/9/28
+     */
+    public void exec() {
+        redisTemplate.exec();
+    }
+
+    /**
+     * 清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。
+     * @author wgz
+     * @date 2020/9/28
+     */
+    public void discard() {
+        redisTemplate.discard();
+    }
+
+    /**
+     * 当某个事务需要按条件执行时，就要使用这个命令将给定的键设置为受监控的。
+     * @author wgz
+     * @date 2020/9/28
+     * @param key
+     */
+    public void watch(String... key) {
+        if (key != null && key.length > 0) {
+            if (key.length == 1) {
+                redisTemplate.watch(key[0]);
+            } else {
+                redisTemplate.watch(CollectionUtils.arrayToList(key));
+            }
+        }
+    }
+
+    /**
+     * 清除所有先前为一个事务监控的键
+     * 如果你调用了EXEC或DISCARD命令，那么就不需要手动调用UNWATCH命令。
+     * @author wgz
+     * @date 2020/9/28
+     */
+    public void unwatch() {
+        redisTemplate.unwatch();
+    }
     // ============================String=============================
 
     /**
