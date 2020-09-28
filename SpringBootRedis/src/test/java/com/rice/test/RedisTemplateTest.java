@@ -38,6 +38,7 @@ public class RedisTemplateTest {
 
     @Test
     public void testRedis2() {
+        redisUtil.select(1);
         redisUtil.set("PMZhang", "嘿嘿大魔王");
         System.out.println(redisUtil.get("PMZhang"));
     }
