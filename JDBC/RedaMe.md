@@ -1,5 +1,5 @@
 
-# JDBC
+# 一
 ## 概念
 
 - Java DataBase Connectivity  Java 数据库连接， Java语言操作数据库
@@ -109,7 +109,7 @@
           double balance = rs.getDouble(3);
        System.out.println(id + "---" + name + "---" + balance);
       }
-  ```
+     ```
 
 #### PreparedStatement：执行sql的对象
 
@@ -138,284 +138,98 @@
 	1. 可以防止SQL注入
 	2. 效率更高
 
-## 抽取JDBC工具类 ： JDBCUtils
-	* 目的：简化书写
-	* 分析：
-		1. 注册驱动也抽取
-		2. 抽取一个方法获取连接对象
-			* 需求：不想传递参数（麻烦），还得保证工具类的通用性。
-			* 解决：配置文件
-				jdbc.properties
-					url=
-					user=
-					password=
 
 
-		3. 抽取一个方法释放资源
-	
-	* 代码实现：
-		public class JDBCUtils {
-	    private static String url;
-	    private static String user;
-	    private static String password;
-	    private static String driver;
-	    /**
-	     * 文件的读取，只需要读取一次即可拿到这些值。使用静态代码块
-	     */
-	    static{
-	        //读取资源文件，获取值。
-	
-	        try {
-	            //1. 创建Properties集合类。
-	            Properties pro = new Properties();
-	
-	            //获取src路径下的文件的方式--->ClassLoader 类加载器
-	            ClassLoader classLoader = JDBCUtils.class.getClassLoader();
-	            URL res  = classLoader.getResource("jdbc.properties");
-	            String path = res.getPath();
-	            System.out.println(path);///D:/IdeaProjects/itcast/out/production/day04_jdbc/jdbc.properties
-	            //2. 加载文件
-	           // pro.load(new FileReader("D:\\IdeaProjects\\itcast\\day04_jdbc\\src\\jdbc.properties"));
-	            pro.load(new FileReader(path));
-	
-	            //3. 获取数据，赋值
-	            url = pro.getProperty("url");
-	            user = pro.getProperty("user");
-	            password = pro.getProperty("password");
-	            driver = pro.getProperty("driver");
-	            //4. 注册驱动
-	            Class.forName(driver);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } catch (ClassNotFoundException e) {
-	            e.printStackTrace();
-	        }
-	    }
+
+## JDBC控制事务
+#### 事务
+
+- 一个包含多个步骤的业务操作。如果这个业务操作被事务管理，则这多个步骤要么同时成功，要么同时失败。
+
+#### 操作
+
+- 开启事务
+- 提交事务
+- 回滚事务
+
+#### 使用Connection对象来管理事务
+
+* 开启事务：setAutoCommit(boolean autoCommit) ：调用该方法设置参数为false，即开启事务
+	* 在执行sql之前开启事务
+* 提交事务：commit() 
+	* 当所有sql都执行完提交事务
+* 回滚事务：rollback() 
+	* 在catch中回滚事务
 
 
-​	
-​	    /**
-​	     * 获取连接
-​	     * @return 连接对象
-​	     */
-​	    public static Connection getConnection() throws SQLException {
-​	
-​	        return DriverManager.getConnection(url, user, password);
-​	    }
-​	
-	    /**
-	     * 释放资源
-	     * @param stmt
-	     * @param conn
-	     */
-	    public static void close(Statement stmt,Connection conn){
-	        if( stmt != null){
-	            try {
-	                stmt.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	
-	        if( conn != null){
-	            try {
-	                conn.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+# 二
 
+## 数据库连接池
+### 概念
 
-​	
-​	    /**
-​	     * 释放资源
-​	     * @param stmt
-​	     * @param conn
-​	     */
-​	    public static void close(ResultSet rs,Statement stmt, Connection conn){
-​	        if( rs != null){
-​	            try {
-​	                rs.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	
-​	        if( stmt != null){
-​	            try {
-​	                stmt.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	
-	        if( conn != null){
-	            try {
-	                conn.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-	
-	}
-	
-	* 练习：
-		* 需求：
-			1. 通过键盘录入用户名和密码
-			2. 判断用户是否登录成功
-				* select * from user where username = "" and password = "";
-				* 如果这个sql有查询结果，则成功，反之，则失败
-	
-		* 步骤：
-			1. 创建数据库表 user
-				CREATE TABLE USER(
-					id INT PRIMARY KEY AUTO_INCREMENT,
-					username VARCHAR(32),
-					PASSWORD VARCHAR(32)
-				
-				);
-	
-				INSERT INTO USER VALUES(NULL,'zhangsan','123');
-				INSERT INTO USER VALUES(NULL,'lisi','234');
-	
-			2. 代码实现：
-				public class JDBCDemo9 {
-	
-				    public static void main(String[] args) {
-				        //1.键盘录入，接受用户名和密码
-				        Scanner sc = new Scanner(System.in);
-				        System.out.println("请输入用户名：");
-				        String username = sc.nextLine();
-				        System.out.println("请输入密码：");
-				        String password = sc.nextLine();
-				        //2.调用方法
-				        boolean flag = new JDBCDemo9().login(username, password);
-				        //3.判断结果，输出不同语句
-				        if(flag){
-				            //登录成功
-				            System.out.println("登录成功！");
-				        }else{
-				            System.out.println("用户名或密码错误！");
-				        }
+- 其实就是一个容器(集合)，存放数据库连接的容器。当系统初始化好后，容器被创建，容器中会申请一些连接对象，当用户来访问数据库时，从容器中获取连接对象，用户访问完之后，会将连接对象归还给容器。
 
+### 好处
 
-​				
-​				    }
+- 节约资源
+- 用户访问高效
 
+### 实现
 
-​				
-​				
-​				    /**
-​				     * 登录方法
-​				     */
-​				    public boolean login(String username ,String password){
-​				        if(username == null || password == null){
-​				            return false;
-​				        }
-​				        //连接数据库判断是否登录成功
-​				        Connection conn = null;
-​				        Statement stmt =  null;
-​				        ResultSet rs = null;
-​				        //1.获取连接
-​				        try {
-​				            conn =  JDBCUtils.getConnection();
-​				            //2.定义sql
-​				            String sql = "select * from user where username = '"+username+"' and password = '"+password+"' ";
-​				            //3.获取执行sql的对象
-​				            stmt = conn.createStatement();
-​				            //4.执行查询
-​				            rs = stmt.executeQuery(sql);
-​				            //5.判断
-​				           /* if(rs.next()){//如果有下一行，则返回true
-​				                return true;
-​				            }else{
-​				                return false;
-​				            }*/
-​				           return rs.next();//如果有下一行，则返回true
-​				
-​				        } catch (SQLException e) {
-​				            e.printStackTrace();
-​				        }finally {
-​				            JDBCUtils.close(rs,stmt,conn);
-​				        }
+- 标准接口：DataSource   javax.sql包下的
+  - 方法
+    - 获取连接：getConnection()
+    - 归还连接：Connection.close()。如果连接对象Connection是从连接池中获取的，那么调用Connection.close()方法，则不会再关闭连接了，而是归还连接。
+- 数据库厂商来实现
+  - C3P0：数据库连接池技术
+  - Druid：数据库连接池实现技术，由阿里巴巴提供的
 
+#### C3P0
 
-​				
-​				        return false;
-​				    }
-​				}
+* 步骤：
+	- 导入jar包 
+	  - `c3p0-0.9.5.2.jar`
+	  - `mchange-commons-java-0.2.12.jar `
+	- 定义配置文件：
+	  - 名称： `c3p0.properties` 或者 `c3p0-config.xml`
+  - 路径：直接将文件放在`src`目录下即可。
+	- 创建核心对象，数据库连接池对象 `ComboPooledDataSource`
+	- 获取连接` getConnection`
+* 代码：
+	 * 创建数据库连接池对象
+   	 * DataSource ds  = new ComboPooledDataSource();
+   * 获取连接对象
+   	 * Connection conn = ds.getConnection();
 
+#### Druid
 
-## JDBC控制事务：
-	1. 事务：一个包含多个步骤的业务操作。如果这个业务操作被事务管理，则这多个步骤要么同时成功，要么同时失败。
-	2. 操作：
-		1. 开启事务
-		2. 提交事务
-		3. 回滚事务
-	3. 使用Connection对象来管理事务
-		* 开启事务：setAutoCommit(boolean autoCommit) ：调用该方法设置参数为false，即开启事务
-			* 在执行sql之前开启事务
-		* 提交事务：commit() 
-			* 当所有sql都执行完提交事务
-		* 回滚事务：rollback() 
-			* 在catch中回滚事务
-	
-	4. 代码：
-		public class JDBCDemo10 {
-	
-		    public static void main(String[] args) {
-		        Connection conn = null;
-		        PreparedStatement pstmt1 = null;
-		        PreparedStatement pstmt2 = null;
-		
-		        try {
-		            //1.获取连接
-		            conn = JDBCUtils.getConnection();
-		            //开启事务
-		            conn.setAutoCommit(false);
-		
-		            //2.定义sql
-		            //2.1 张三 - 500
-		            String sql1 = "update account set balance = balance - ? where id = ?";
-		            //2.2 李四 + 500
-		            String sql2 = "update account set balance = balance + ? where id = ?";
-		            //3.获取执行sql对象
-		            pstmt1 = conn.prepareStatement(sql1);
-		            pstmt2 = conn.prepareStatement(sql2);
-		            //4. 设置参数
-		            pstmt1.setDouble(1,500);
-		            pstmt1.setInt(2,1);
-		
-		            pstmt2.setDouble(1,500);
-		            pstmt2.setInt(2,2);
-		            //5.执行sql
-		            pstmt1.executeUpdate();
-		            // 手动制造异常
-		            int i = 3/0;
-		
-		            pstmt2.executeUpdate();
-		            //提交事务
-		            conn.commit();
-		        } catch (Exception e) {
-		            //事务回滚
-		            try {
-		                if(conn != null) {
-		                    conn.rollback();
-		                }
-		            } catch (SQLException e1) {
-		                e1.printStackTrace();
-		            }
-		            e.printStackTrace();
-		        }finally {
-		            JDBCUtils.close(pstmt1,conn);
-		            JDBCUtils.close(pstmt2,null);
-		        }
+- 步骤：
+  - 导入jar包 
+    - druid-1.0.9.jar
+  - 定义配置文件
+    - 是properties形式的
+    - 可以叫任意名称，可以放在任意目录下
+  - 加载配置文件，Properties
+  - 获取数据库连接池对象，通过工厂来来获取  DruidDataSourceFactory
+  - 获取连接，getConnection
 
+## SpringJDBC
 
-​		
-​		    }
-​		
-​		}
+Spring框架对JDBC的简单封装。提供了一个JDBCTemplate对象简化JDBC的开发
 
+步骤：
+- 导入jar包
+- 创建JdbcTemplate对象。依赖于数据源DataSource
+  - JdbcTemplate template = new JdbcTemplate(ds);
+- 调用JdbcTemplate的方法来完成CRUD的操作
+  - update():执行DML语句。增、删、改语句
+  - queryForMap():查询结果将结果集封装为map集合，将列名作为key，将值作为value 将这条记录封装为一个map集合
+    - 注意：这个方法查询的结果集长度只能是1
+  - queryForList():查询结果将结果集封装为list集合
+    - 注意：将每一条记录封装为一个Map集合，再将Map集合装载到List集合中
+  - query():查询结果，将结果封装为JavaBean对象
+    - query的参数：RowMapper
+      - 一般我们使用BeanPropertyRowMapper实现类。可以完成数据到JavaBean的自动封装
+      - new BeanPropertyRowMapper<类型>(类型.class)
+  - queryForObject：查询结果，将结果封装为对象
+    - 一般用于聚合函数的查询
