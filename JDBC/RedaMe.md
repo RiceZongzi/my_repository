@@ -224,7 +224,7 @@ Spring框架对JDBC的简单封装。提供了一个JDBCTemplate对象简化JDBC
 - 调用JdbcTemplate的方法来完成CRUD的操作
   - update():执行DML语句。增、删、改语句
   - queryForMap():查询结果将结果集封装为map集合，将列名作为key，将值作为value 将这条记录封装为一个map集合
-    - 注意：这个方法查询的结果集长度只能是1
+    - <span style=color:red>注意：这个方法查询的结果集长度只能是1</span>
   - queryForList():查询结果将结果集封装为list集合
     - 注意：将每一条记录封装为一个Map集合，再将Map集合装载到List集合中
   - query():查询结果，将结果封装为JavaBean对象
