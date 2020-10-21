@@ -1,4 +1,4 @@
-package com.rice.structure.list;
+package com.rice.structure.collection.list;
 
 import java.util.LinkedList;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package com.rice.structure.set;
+package com.rice.structure.collection.set;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;

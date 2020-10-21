@@ -1,4 +1,4 @@
-package com.rice.structure.base;
+package com.rice.structure.collection.Vector;
 
 import java.util.Random;
 import java.util.Stack;
