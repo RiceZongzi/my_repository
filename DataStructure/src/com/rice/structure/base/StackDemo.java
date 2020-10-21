@@ -1,4 +1,4 @@
-package com.rice.structure;
+package com.rice.structure.base;
 
 import java.util.Random;
 import java.util.Stack;
@@ -35,7 +35,6 @@ public class StackDemo {
 
     public static void main(String[] args) {
         init();
-        System.out.println(stack);
         push(random.nextInt(100));
         pop();
     }
@@ -61,5 +60,6 @@ public class StackDemo {
         for (int i = 0; i < 5; i++) {
             stack.push(random.nextInt(100));
         }
+        System.out.println(stack);
     }
 }
