@@ -35,7 +35,16 @@ public class CollectionDemo {
     public static void main(String[] args) {
         init();
 
+        // 增强For遍历
+        for (Integer integer : collection) {
+            System.out.println(integer);
+        }
+
+        // 迭代器遍历
         Iterator<Integer> iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
     }
 
     private static void init() {
