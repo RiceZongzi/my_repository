@@ -1,6 +1,7 @@
 package com.rice.lambda;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -25,10 +26,33 @@ public class LambdaDemo {
     */
     public static void main(String[] args) {
 //        showDiffByWaysToCreateThread();
-        sortObject();
+        sortObjectByCollections();
+        sortObjectByArrays();
     }
 
-    private static void sortObject() {
+    private static void sortObjectByArrays() {
+        Person[] arr = {
+                new Person("AntiMage", 26),
+                new Person("Viper", 46),
+                new Person("Invoker", 22),
+                new Person("Axe", 30),
+                new Person("Luna", 21)
+        };
+        // 匿名内部类
+        Arrays.sort(arr, new Comparator<Person>() {
+            @Override
+            public int compare(Person o1, Person o2) {
+                return o1.getAge() - o2.getAge();
+            }
+        });
+        // Lambda @Since JDK 8
+        Arrays.sort(arr, (o1, o2) -> o1.getAge() - o2.getAge());
+        // Functional @Since JDK 8
+        Arrays.sort(arr, Comparator.comparingInt(Person::getAge));
+        System.out.println(arr);
+    }
+
+    private static void sortObjectByCollections() {
         ArrayList<Person> arrayList = new ArrayList<>();
         arrayList.add(new Person("AntiMage", 26));
         arrayList.add(new Person("Viper", 46));
