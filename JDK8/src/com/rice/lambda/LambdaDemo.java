@@ -57,7 +57,9 @@ public class LambdaDemo {
         Arrays.sort(arr, (o1, o2) -> o1.getAge() - o2.getAge());
         // Functional @Since JDK 8
         Arrays.sort(arr, Comparator.comparingInt(Person::getAge));
-        System.out.println(arr);
+        for (Person person : arr) {
+            System.out.println(person);
+        }
     }
 
     private static void sortObjectByCollections() {
