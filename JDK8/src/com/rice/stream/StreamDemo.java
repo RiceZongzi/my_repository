@@ -21,7 +21,44 @@ public class StreamDemo {
      */
     public static void main(String[] args) {
 //        forEachAndFilterDemo();
-        mapAndCollectDemo();
+//        mapAndCollectDemo();
+        countAndLimitAndSkip();
+    }
+
+    /**
+     * Stream流中的常用方法_count:用于统计Stream流中元素的个数
+     *     long count();
+     *     count方法是一个终结方法,返回值是一个long类型的整数
+     *     所以不能再继续调用Stream流中的其他方法了
+     *
+     * Stream流中的常用方法_limit:用于截取流中的元素
+     *     limit方法可以对流进行截取，只取用前n个。方法签名：
+     *     Stream<T> limit(long maxSize);
+     *         参数是一个long型，如果集合当前长度大于参数则进行截取；否则不进行操作
+     *     limit方法是一个延迟方法,只是对流中的元素进行截取，返回的是一个新的流，
+     *         所以可以继续调用Stream流中的其他方法。
+     *
+     * Stream流中的常用方法_skip:用于跳过元素
+     *     如果希望跳过前几个元素，可以使用skip方法获取一个截取之后的新流：
+     *     Stream<T> skip(long n);
+     *         如果流的当前长度大于n，则跳过前n个；否则将会得到一个长度为0的空流。
+     */
+    private static void countAndLimitAndSkip() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            list.add(i);
+        }
+        long count = list
+                .stream()
+                .filter(integer -> integer < 5)
+                .count();
+        System.out.println("list中，小于5的元素的个数为" + count);
+        list.stream()
+                .limit(count)
+                .forEach(integer -> System.out.println("小于5的元素为" + integer));
+        list.stream()
+                .skip(count + 1)
+                .forEach(integer -> System.out.println("大于5的元素为" + integer));
     }
 
     /**
