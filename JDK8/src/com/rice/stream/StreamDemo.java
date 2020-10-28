@@ -2,6 +2,7 @@ package com.rice.stream;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wgz
@@ -10,11 +11,60 @@ import java.util.List;
  */
 public class StreamDemo {
 
+    /**
+     * java.util.stream.Stream<T>是Java 8新加入的最常用的流接口。（这并不是一个函数式接口。）
+     *     获取一个流非常简单，有以下几种常用的方式：
+     *         - 所有的Collection集合都可以通过stream默认方法获取流；
+     *             default Stream<E> stream​()
+     *         - Stream接口的静态方法of可以获取数组对应的流。
+     *             static <T> Stream<T> of​(T... values)
+     */
     public static void main(String[] args) {
-        forEachDemo();
+//        forEachAndFilterDemo();
+        mapAndCollectDemo();
     }
 
-    private static void forEachDemo() {
+    /**
+     * Stream流中的常用方法_map:用于类型转换
+     *     如果需要将流中的元素映射到另一个流中，可以使用map方法.
+     *     <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+     *     该接口需要一个Function函数式接口参数，可以将当前流中的T类型数据转换为另一种R类型的流。
+     *     Function中的抽象方法:
+     *         R apply(T t);
+     */
+    private static void mapAndCollectDemo() {
+        List<String> stringList = new ArrayList<>();
+        stringList.add("1");
+        stringList.add("2");
+        stringList.add("3");
+        stringList.add("4");
+        stringList.add("5");
+        List<Integer> integerList = stringList
+                .stream()
+                // 把字符串类型的整数，转换(映射)为Integer类型的整数
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        integerList.forEach(System.out::println);
+    }
+
+    /**
+     * Stream流中的常用方法_forEach
+     *     void forEach(Consumer<? super T> action);
+     *     该方法接收一个Consumer接口函数，会将每一个流元素交给该函数进行处理。
+     *     Consumer接口是一个消费型的函数式接口,可以传递Lambda表达式,消费数据
+     *
+     *     简单记:
+     *         forEach方法,用来遍历流中的数据
+     *         是一个终结方法,遍历之后就不能继续调用Stream流中的其他方法
+     *
+     * Stream流中的常用方法_filter:
+     *     用于对Stream流中的数据进行过滤
+     *     Stream<T> filter(Predicate<? super T> predicate);
+     *     filter方法的参数Predicate是一个函数式接口,所以可以传递Lambda表达式,对数据进行过滤
+     *     Predicate中的抽象方法:
+     *         boolean test(T t);
+     */
+    private static void forEachAndFilterDemo() {
         List<String> list = new ArrayList<>();
         list.add("AntiMage");
         list.add("Viper");
