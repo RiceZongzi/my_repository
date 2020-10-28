@@ -15,7 +15,28 @@ public class MethodRefDemo {
     public static void main(String[] args) {
 //        methodReference();
 //        objectMethodReference();
-        staticMethodReference();
+//        staticMethodReference();
+        constructorMethodReference();
+    }
+
+    /**
+     * 类的构造器(构造方法)引用
+     */
+    private static void constructorMethodReference() {
+        // 调用printName方法
+        // 方法的参数PersonBuilder接口是一个函数式接口
+        // 可以传递Lambda
+        printName("AntiMage",(String name)->{
+            return new Person(name);
+        });
+
+        /*
+            使用方法引用优化Lambda表达式
+            构造方法new Person(String name) 已知
+            创建对象已知 new
+            就可以使用Person引用new创建对象
+         */
+        printName("AntiMage", Person::new);
     }
 
     /**
@@ -110,6 +131,17 @@ public class MethodRefDemo {
      */
     public static int method(int number, Calcable c){
         return c.calsAbs(number);
+    }
+
+    /**
+     * @author wgz
+     * create date 2020/10/28 23:37
+     * @param name 姓名
+     * @param pb PersonBuilder接口
+     */
+    public static void printName(String name, PersonBuilder pb){
+        Person person = pb.builderPerson(name);
+        System.out.println(person.getName());
     }
 }
 
@@ -271,4 +303,31 @@ class Husband {
     public static void main(String[] args) {
         new Husband().soHappy();
     }
+}
+
+class Person {
+    private String name;
+
+    public Person() {
+    }
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+/**
+    定义一个创建Person对象的函数式接口
+ */
+@FunctionalInterface
+interface PersonBuilder {
+    Person builderPerson(String name);
 }
