@@ -160,3 +160,10 @@ class Person {
                 '}';
     }
 }
+
+class RunnableExample implements Runnable{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName() + " Runnable interface 线程创建了");
+    }
+}
