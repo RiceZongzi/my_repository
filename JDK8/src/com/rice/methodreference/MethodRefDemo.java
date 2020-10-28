@@ -13,11 +13,37 @@ public class MethodRefDemo {
      *      那么则可以通过双冒号来引用该方法作为Lambda的替代者。
      */
     public static void main(String[] args) {
-//        printableDemo();
-        printableObjectDemo();
+//        methodReference();
+//        objectMethodReference();
+        staticMethodReference();
     }
 
-    private static void printableObjectDemo() {
+    /**
+     *     通过类名引用静态成员方法
+     *     类已经存在,静态成员方法也已经存在
+     *     就可以通过类名直接引用静态成员方法
+     */
+    private static void staticMethodReference() {
+        // 调用method方法，
+        // 传递计算绝对值得整数，
+        // 和Lambda表达式
+        int λ = method(-10, (n)->{
+            // 对参数进行绝对值得计算并返回结果
+            return Math.abs(n);
+        });
+        System.out.println(λ);
+
+        /*
+            使用方法引用优化Lambda表达式
+            Math类是存在的
+            abs计算绝对值的静态方法也是已经存在的
+            所以我们可以直接通过类名引用静态方法
+         */
+        int num = method(-10, Math::abs);
+        System.out.println(num);
+    }
+
+    private static void objectMethodReference() {
         // 调用printString方法，
         // 方法的参数Printable是一个函数式接口，
         // 所以可以传递Lambda表达式
@@ -46,7 +72,7 @@ public class MethodRefDemo {
      *      Lambda表达式写法： s -> System.out.println(s);
      *      方法引用写法：     System.out::println;
      */
-    private static void printableDemo() {
+    private static void methodReference() {
         // 调用printString方法
         // 方法的参数Printable是一个函数式接口
         // 所以可以传递Lambda
@@ -76,6 +102,15 @@ public class MethodRefDemo {
     private static void printString(Printable p) {
         p.print("Hello World!");
     }
+
+    /**
+     *
+     * @param number 要计算绝对值的整数
+     * @param c 函数式接口Calcable
+     */
+    public static int method(int number, Calcable c){
+        return c.calsAbs(number);
+    }
 }
 
 
@@ -104,4 +139,16 @@ class MethodRerObject {
     public void printUpperCaseString(String str){
         System.out.println(str.toUpperCase());
     }
+}
+
+@FunctionalInterface
+interface Calcable {
+    /**
+     * 定义一个抽象方法，对整数进行绝对值计算并返回
+     * @author wgz
+     * @date 2020/10/28
+     * @param number 整数
+     * @return int
+     */
+    int calsAbs(int number);
 }
