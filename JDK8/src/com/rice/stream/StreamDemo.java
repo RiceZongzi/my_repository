@@ -3,6 +3,7 @@ package com.rice.stream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author wgz
@@ -22,7 +23,27 @@ public class StreamDemo {
     public static void main(String[] args) {
 //        forEachAndFilterDemo();
 //        mapAndCollectDemo();
-        countAndLimitAndSkip();
+//        countAndLimitAndSkip();
+        concatDemo();
+    }
+
+    /**
+     * Stream流中的常用方法_concat:用于把流组合到一起
+     *     如果有两个流，希望合并成为一个流，那么可以使用Stream接口的静态方法concat
+     *     static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b)
+     */
+    private static void concatDemo() {
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            if (i > 5) {
+                list1.add(i);
+            } else {
+                list2.add(i);
+            }
+        }
+        Stream.concat(list1.stream(), list2.stream())
+                .forEach(System.out::println);
     }
 
     /**
