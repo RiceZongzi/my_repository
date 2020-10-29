@@ -3,6 +3,8 @@ package com.rice.time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author wgz
@@ -14,7 +16,59 @@ public class NewTimeAPIDemo {
     public static void main(String[] args) {
 //        localDate();
 //        localTime();
-        localDateTime();
+//        localDateTime();
+        construction();
+    }
+
+    /**
+     * 构造时间
+     * @author wgz
+     * @date 2020/10/29
+     */
+    private static void construction() {
+        // ----------LocalDate---------
+        // 直接传入int类型的年、月、日
+        System.out.println(LocalDate.of(1997, 7, 1));
+        // 把月换成了枚举
+        System.out.println(LocalDate.of(1997, Month.JULY, 1));
+        LocalDate demoDate = LocalDate.of(1997, 7, 1);
+        // 第一个参数为年，第二个参数为当年的第多少天
+        System.out.println(LocalDate.ofYearDay(1997, demoDate.getDayOfYear()));
+        // 参数为距离1970-01-01的天数
+        System.out.println(LocalDate.ofEpochDay(demoDate.toEpochDay()));
+        // 字符串
+        System.out.println(LocalDate.parse("1997-07-01"));
+        // 字符串，对应的格式
+        System.out.println(LocalDate.parse("19970701", DateTimeFormatter.ofPattern("yyyyMMdd")));
+
+        // ----------LocalTime---------
+        // int类型的时、分
+        System.out.println(LocalTime.of(8, 20));
+        // int类型的时、分、秒
+        System.out.println(LocalTime.of(8, 20, 30));
+        // int类型的时、分、秒、纳秒
+        System.out.println(LocalTime.of(8, 20, 30, 150));
+        LocalTime demoTime = LocalTime.of(8, 20, 30, 150);
+        // 参数为距离当天零时的秒数
+        System.out.println(LocalTime.ofSecondOfDay(demoTime.toSecondOfDay()));
+        // 参数为距离当天零时的纳秒数
+        System.out.println(LocalTime.ofNanoOfDay(demoTime.toNanoOfDay()));
+        // 字符串
+        System.out.println(LocalTime.parse("08:20:30"));
+        // 字符串，对应的格式
+        System.out.println(LocalTime.parse("082030", DateTimeFormatter.ofPattern("HHmmss")));
+
+        // ----------LocalDateTime-----
+        // 参数为LocalDate和LocalTime
+        System.out.println(LocalDateTime.of(demoDate, demoTime));
+        System.out.println(LocalDateTime.of(1997, 7, 1, 8, 20));
+        System.out.println(LocalDateTime.of(1997, Month.JULY, 1, 8, 20));
+        System.out.println(LocalDateTime.of(1997, 7, 1, 8, 20, 30));
+        System.out.println(LocalDateTime.of(1997, Month.JULY, 1, 8, 20, 30));
+        System.out.println(LocalDateTime.of(1997, 7, 1, 8, 20, 30, 150));
+        System.out.println(LocalDateTime.of(1997, Month.JULY, 1, 8, 20, 30, 150));
+        System.out.println(LocalDateTime.parse("1997-07-01T08:20:30"));
+        System.out.println(LocalDateTime.parse("1997-07-01 08:20:30", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     /**
