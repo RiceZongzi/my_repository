@@ -1,9 +1,6 @@
 package com.rice.time;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -13,11 +10,53 @@ import java.time.format.DateTimeFormatter;
  */
 public class NewTimeAPIDemo {
 
+    private static final LocalDate NATIONAL_DAY = LocalDate.of(1949, 10, 1);
+
+
     public static void main(String[] args) {
 //        localDate();
 //        localTime();
 //        localDateTime();
-        construction();
+//        construction();
+        compare();
+    }
+
+    /**
+     * 时间比较
+     * @author wgz
+     * @date 2020/10/29
+     */
+    private static void compare() {
+        // isBefore()
+        // isAfter()
+        // equals()
+        // ----------LocalDate---------
+        LocalDate demoDate = LocalDate.of(2016, 8, 31);
+        LocalDate nowDate = LocalDate.now();
+        System.out.println(demoDate + "是否是" + nowDate + "？ " + demoDate.equals(nowDate));
+        System.out.println(demoDate + "是否在" + nowDate + "之后？ " + demoDate.isAfter(nowDate));
+        System.out.println(demoDate + "是否在" + nowDate + "之前？ " + demoDate.isBefore(nowDate));
+
+        // ----------LocalTime---------
+        LocalTime demoTime = LocalTime.of(8, 20, 30, 150);
+        LocalTime nowTime = LocalTime.now();
+        System.out.println(demoTime + "是否是" + nowTime + "？ " + demoTime.equals(nowTime));
+        System.out.println(demoTime + "是否在" + nowTime + "之后？ " + demoTime.isAfter(nowTime));
+        System.out.println(demoTime + "是否在" + nowTime + "之前？ " + demoTime.isBefore(nowTime));
+
+        // 判断是否是某个节日或者重复事件，使用MonthDay类。
+        // 这个类由月日组合，不包含年信息，可以用来代表每年重复出现的一些日期。
+        // 它和新的日期库中的其他类一样也都是不可变且线程安全的。
+        MonthDay nationalHoliday = MonthDay.of(NATIONAL_DAY.getMonthValue(), NATIONAL_DAY.getDayOfMonth());
+        MonthDay today = MonthDay.from(nowDate);
+        System.out.println("今天是国庆节吗？ " + today.equals(nationalHoliday));
+        // YearMonth表示固定的日期。
+        YearMonth ym = YearMonth.of(2008, 2);
+        System.out.println(ym + "有多少天？ " + ym.lengthOfMonth());
+        // Year表示年。
+        Year year = Year.of(2008);
+        System.out.println(year + "有多少天？ " + year.length());
+        System.out.println(year + "是否是闰年？ " + year.isLeap());
     }
 
     /**
