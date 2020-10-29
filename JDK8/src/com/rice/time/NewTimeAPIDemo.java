@@ -1,6 +1,7 @@
 package com.rice.time;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  * @author wgz
@@ -10,7 +11,32 @@ import java.time.LocalDate;
 public class NewTimeAPIDemo {
 
     public static void main(String[] args) {
-        localDate();
+//        localDate();
+        localTime();
+    }
+
+    /**
+     * 类获取时间，格式为 HH:mm:ss.SSS
+     * @author wgz
+     * @date 2020/10/29
+     */
+    private static void localTime() {
+        // HH:mm:ss.SSS
+        LocalTime now = LocalTime.now();
+        System.out.println("现在的时间是" + now);
+        // 小时
+        int hour = now.getHour();
+        // 分钟
+        int minute = now.getMinute();
+        // 秒
+        int second = now.getSecond();
+        // 纳秒
+        int nano = now.getNano();
+        System.out.println("现在的时间是"
+                + hour + "时"
+                + minute + "分"
+                + second + "秒"
+                + nano);
     }
 
     /**
