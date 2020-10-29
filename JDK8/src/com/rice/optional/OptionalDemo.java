@@ -24,8 +24,23 @@ public class OptionalDemo {
     */
     public static void main(String[] args) {
 //        construction();
-        test01(null);
-        test01(new Student("Axe", "Dire", 40));
+//        test01(null);
+//        test01(new Student("Axe", "Dire", 40));
+        test02(null);
+        test02(new Student("Axe", "Dire", 40));
+    }
+
+    private static void test02(Student student) {
+        Optional<Student> ofNullableStudent = Optional.ofNullable(student);
+        // 如果有值，返回传入的值；否则返回默认值
+        Student orElseStudent = ofNullableStudent.orElse(
+                new Student("AntiMage", "Radiant", 22));
+        System.out.println(orElseStudent);
+
+        // 函数式接口
+        Student orElseGetStudent = ofNullableStudent.orElseGet(
+                () -> new Student("AntiMage", "Radiant", 22));
+        System.out.println(orElseGetStudent);
     }
 
     private static void test01(Student student) {
@@ -37,10 +52,6 @@ public class OptionalDemo {
         }
         // 等效于上面三行代码
         ofNullableStudent.ifPresent(System.out::println);
-
-        // 如果有值，返回传入的值；否则返回默认值
-        Student s = ofNullableStudent.orElse(new Student("AntiMage", "Radiant", 22));
-        System.out.println(s);
     }
 
     private static void construction() {
