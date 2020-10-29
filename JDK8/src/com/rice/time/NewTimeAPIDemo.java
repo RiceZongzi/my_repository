@@ -2,6 +2,7 @@ package com.rice.time;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 /**
  * @author wgz
@@ -18,7 +19,41 @@ public class NewTimeAPIDemo {
 //        localTime();
 //        localDateTime();
 //        construction();
-        compare();
+//        compare();
+        change();
+    }
+
+    private static void change() {
+        // ----------LocalDate---------
+        LocalDate nowDate = LocalDate.now();
+        System.out.println(nowDate + "的一年前是： " + nowDate.minusYears(1));
+        System.out.println(nowDate + "的一年后是： " + nowDate.plusYears(1));
+        System.out.println(nowDate + "的一月前是： " + nowDate.minusMonths(1));
+        System.out.println(nowDate + "的一月后是： " + nowDate.plusMonths(1));
+        System.out.println(nowDate + "的一周前是： " + nowDate.minusWeeks(1));
+        System.out.println(nowDate + "的一周后是： " + nowDate.plusWeeks(1));
+        System.out.println(nowDate + "的一天前是： " + nowDate.minusDays(1));
+        System.out.println(nowDate + "的一天后是： " + nowDate.plusDays(1));
+
+        // ----------LocalTime---------
+        LocalTime nowTime = LocalTime.now();
+        System.out.println(nowTime + "的一小时前是： " + nowTime.minusHours(1));
+        System.out.println(nowTime + "的一小时后是： " + nowTime.plusHours(1));
+        System.out.println(nowTime + "的一分钟前是： " + nowTime.minusMinutes(1));
+        System.out.println(nowTime + "的一分钟后是： " + nowTime.plusMinutes(1));
+        System.out.println(nowTime + "的一秒钟前是： " + nowTime.minusSeconds(1));
+        System.out.println(nowTime + "的一秒钟后是： " + nowTime.plusSeconds(1));
+        System.out.println(nowTime + "的一纳秒前是： " + nowTime.minusNanos(1));
+        System.out.println(nowTime + "的一纳秒后是： " + nowTime.plusNanos(1));
+
+        // 还可以直接使用 plus 和 minus 方法来增加和减少日期时间，
+        // LocalDateTime、LocalDate、LocalTime 都适用，
+        // ChronoUnit 用来表示时间单位，
+        // 只需要替换成相应的年、月、周、日、时、分、秒、纳秒，就能减少或增加相应的单位。
+        System.out.println(nowDate + "的一年前是： " +
+                nowDate.minus(1, ChronoUnit.YEARS));
+        System.out.println(nowTime + "的一秒钟后是： " +
+                nowTime.plus(1,ChronoUnit.SECONDS));
     }
 
     /**
