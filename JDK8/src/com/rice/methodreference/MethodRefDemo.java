@@ -1,5 +1,7 @@
 package com.rice.methodreference;
 
+import java.util.Arrays;
+
 /**
  * @author wgz
  * @description
@@ -15,7 +17,52 @@ public class MethodRefDemo {
     public static void main(String[] args) {
 //        methodReference();
 //        objectMethodReference();
-        staticMethodReference();
+//        staticMethodReference();
+//        constructorMethodReference();
+        arrayMethodReference();
+    }
+
+    /**
+     * 数组的构造器引用
+     */
+    private static void arrayMethodReference() {
+        // 调用createArray方法
+        // 传递数组的长度和Lambda表达式
+        int[] arr1 = createArray(10,(len)->{
+            // 根据数组的长度，创建数组并返回
+            return new int[len];
+        });
+        System.out.println(arr1.length);
+
+        /*
+            使用方法引用优化Lambda表达式
+            已知创建的就是int[]数组
+            数组的长度也是已知的
+            就可以使用方法引用
+            int[]引用new，根据参数传递的长度来创建数组
+         */
+        int[] arr2 =createArray(10, int[]::new);
+        System.out.println(arr2.length);
+    }
+
+    /**
+     * 类的构造器(构造方法)引用
+     */
+    private static void constructorMethodReference() {
+        // 调用printName方法
+        // 方法的参数PersonBuilder接口是一个函数式接口
+        // 可以传递Lambda
+        printName("AntiMage",(String name)->{
+            return new Person(name);
+        });
+
+        /*
+            使用方法引用优化Lambda表达式
+            构造方法new Person(String name) 已知
+            创建对象已知 new
+            就可以使用Person引用new创建对象
+         */
+        printName("AntiMage", Person::new);
     }
 
     /**
@@ -110,6 +157,28 @@ public class MethodRefDemo {
      */
     public static int method(int number, Calcable c){
         return c.calsAbs(number);
+    }
+
+    /**
+     * @author wgz
+     * create date 2020/10/28 23:37
+     * @param name 姓名
+     * @param pb PersonBuilder接口
+     */
+    public static void printName(String name, PersonBuilder pb){
+        Person person = pb.builderPerson(name);
+        System.out.println(person.getName());
+    }
+
+    /**
+     * @author wgz
+     * create date 2020/10/28 23:48
+     * @param length 创建数组的长度
+     * @param ab ArrayBuilder接口
+     * @return int[] 根据传递的长度使用ArrayBuilder中的方法创建数组
+     */
+    public static int[] createArray(int length, ArrayBuilder ab){
+        return  ab.builderArray(length);
     }
 }
 
@@ -224,4 +293,86 @@ interface Greetable {
      * @date 2020/10/28
      */
     void greet();
+}
+
+/**
+ * 定义一个富有的函数式接口
+ */
+@FunctionalInterface
+interface Richable {
+    /**
+     * 定义一个想买什么就买什么的方法
+     * @author wgz
+     * @date 2020/10/28
+     */
+    void buy();
+}
+
+class Husband {
+    public void buyHouse(){
+        // 定义一个买房子的方法
+        System.out.println("北京二环内买一套四合院!");
+    }
+
+    public void marry(Richable r){
+        // 定义一个结婚的方法,参数传递Richable接口
+        r.buy();
+    }
+
+    public void soHappy(){
+        // 调用结婚的方法
+        // 方法的参数Richable是一个函数式接口
+        // 传递Lambda表达式
+        marry(()->{
+            // 使用this.成员方法，调用本类买房子的方法
+            this.buyHouse();
+        });
+
+        /*
+            使用方法引用优化Lambda表达式
+            this是已经存在的
+            本类的成员方法buyHouse也是已经存在的
+            所以我们可以直接使用this引用本类的成员方法buyHouse
+         */
+        marry(this::buyHouse);
+    }
+
+    public static void main(String[] args) {
+        new Husband().soHappy();
+    }
+}
+
+class Person {
+    private String name;
+
+    public Person() {
+    }
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+/**
+    定义一个创建Person对象的函数式接口
+ */
+@FunctionalInterface
+interface PersonBuilder {
+    Person builderPerson(String name);
+}
+
+/**
+    定义一个创建数组的函数式接口
+ */
+@FunctionalInterface
+interface ArrayBuilder {
+    int[] builderArray(int length);
 }
