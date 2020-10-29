@@ -1,6 +1,7 @@
 package com.rice.time;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
@@ -12,7 +13,40 @@ public class NewTimeAPIDemo {
 
     public static void main(String[] args) {
 //        localDate();
-        localTime();
+//        localTime();
+        localDateTime();
+    }
+
+    /**
+     * 类获取日期时间信息。格式为 yyyy-MM-ddTHH:mm:ss.SSS
+     * @author wgz
+     * @date 2020/10/29
+     */
+    private static void localDateTime() {
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        System.out.println("现在是：" + nowDateTime);
+        // 年
+        System.out.println(nowDateTime.getYear());
+        // 月
+        System.out.println(nowDateTime.getMonthValue());
+        // 日
+        System.out.println(nowDateTime.getDayOfMonth());
+        // 时
+        System.out.println(nowDateTime.getHour());
+        // 分
+        System.out.println(nowDateTime.getMinute());
+        // 秒
+        System.out.println(nowDateTime.getSecond());
+        // 纳秒
+        System.out.println(nowDateTime.getNano());
+        // 当年的第几天
+        System.out.println("是今年的第" + nowDateTime.getDayOfYear() + "天");
+        // 星期
+        System.out.println(nowDateTime.getDayOfWeek());
+        System.out.println(nowDateTime.getDayOfWeek().getValue());
+        // 月份
+        System.out.println(nowDateTime.getMonth());
+        System.out.println(nowDateTime.getMonth().getValue());
     }
 
     /**
