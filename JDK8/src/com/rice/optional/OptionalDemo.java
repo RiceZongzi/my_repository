@@ -12,22 +12,40 @@ public class OptionalDemo {
     Optional容器类的常用方法:
         Optional.of(T t) : 创建一个Optional实例
         Optional.empty() : 创建一个空的Optional实例
-        Optional.ofNullable(T t): 若t不为null,创建Optional实例，否则创建空实例
+        Optional.ofNullable(T t): 若t不为null，创建Optional实例，否则创建空实例
 
         get() ： 如果在这个Optional中包含这个值，返回值，否则抛出异常：NoSuchElementException
         isPresent() : 判断是否包含值
-        ifPresent(Consumer<? super T> consumer) : 如果值存在则使用该值调用 consumer , 否则不做任何事情。
+        ifPresent(Consumer<? super T> consumer) : 如果值存在则使用该值调用 consumer，否则不做任何事情。
         orElse(T t) : 如果调用对象包含值，返回该值，否则返回t
         orElseGet(Supplier s) : 如果调用对象包含值，返回该值，否则返回s获取的值
-        map(Function f) : 如果有值对其处理，并返回处理后的Optional,否则返回Optional.empty()
+        map(Function f) : 如果有值对其处理，并返回处理后的Optional，否则返回Optional.empty()
         flatMap(Function mapper) : 与 map类似，要求返回值必须是Optional
     */
     public static void main(String[] args) {
 //        construction();
 //        test01(null);
 //        test01(new Student("Axe", "Dire", 40));
-        test02(null);
-        test02(new Student("Axe", "Dire", 40));
+//        test02(null);
+//        test02(new Student("Axe", "Dire", 40));
+        test03(null);
+        test03(new Student("Axe", "Dire", 40));
+    }
+
+    private static void test03(Student student) {
+        Optional<Student> ofNullableStudent = Optional.ofNullable(student);
+        // 如果有值对其处理，并返回处理后的Optional，否则返回Optional.empty()
+        Optional<String> optionalMapName = ofNullableStudent.map(s -> s.getName());
+        // get() 操作前线判断是否有值
+        if (optionalMapName.isPresent()) {
+            System.out.println(optionalMapName.get());
+        }
+        // 与上面类似，要求返回值必须是Optional
+        Optional<String> optionalFlatMapName = ofNullableStudent.flatMap(s -> Optional.of(s.getName()));
+        // get() 操作前线判断是否有值
+        if (optionalFlatMapName.isPresent()) {
+            System.out.println(optionalFlatMapName.get());
+        }
     }
 
     private static void test02(Student student) {
