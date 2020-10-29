@@ -1,8 +1,10 @@
 package com.rice.time;
 
+import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 /**
  * @author wgz
@@ -20,9 +22,56 @@ public class NewTimeAPIDemo {
 //        localDateTime();
 //        construction();
 //        compare();
-        change();
+//        change();
+        formatter();
     }
 
+    /**
+     * 日期时间格式化
+     * @author wgz
+     * @date 2020/10/29
+     */
+    private static void formatter() {
+        // 在JDK8之前，时间日期的格式化非常麻烦，
+        // 经常使用SimpleDateFormat来进行格式化，但是SimpleDateFormat并不是线程安全的。
+        // 在JDK8中，引入了一个全新的线程安全的日期与时间格式器DateTimeFormatter。
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 正反都能调用format方法。
+        String ldtStr = now.format(dtf);
+        System.out.println(ldtStr);
+        // 正反都能调用format方法。
+        String ldtStr1 = dtf.format(now);
+        System.out.println(ldtStr1);
+
+        // JDK8获取时间戳(从1970-01-01 00：00：00到当前时间的毫秒值)特别简单。
+        // Instant类由一个静态的工厂方法now()可以返回当前时间戳。
+        Instant instant = Instant.now();
+        System.out.println("当前时间戳是：" + instant);
+        // Instant类 转 Date类
+        Date date = Date.from(instant);
+        System.out.println("当前时间戳是：" + date);
+        Date date1 = new Date();
+        System.out.println("当前时间戳是：" + date1);
+        // Date类 转 Instant类
+        Instant instant1 = date1.toInstant();
+        System.out.println("当前时间戳是：" + instant1);
+
+        // Timestamp 转 LocalDateTime
+        Timestamp time = Timestamp.from(Instant.now());
+        LocalDateTime localDateTime = time.toLocalDateTime();
+        System.out.println(localDateTime);
+        // LocalDateTime 转 Timestamp
+        Timestamp time1 = Timestamp.valueOf(LocalDateTime.now());
+        System.out.println(time1);
+    }
+
+    /**
+     * 日期时间修改
+     * @author wgz
+     * @date 2020/10/29
+     */
     private static void change() {
         // ----------LocalDate---------
         LocalDate nowDate = LocalDate.now();
@@ -57,7 +106,7 @@ public class NewTimeAPIDemo {
     }
 
     /**
-     * 时间比较
+     * 日期时间比较
      * @author wgz
      * @date 2020/10/29
      */
@@ -95,7 +144,7 @@ public class NewTimeAPIDemo {
     }
 
     /**
-     * 构造时间
+     * 构造日期时间
      * @author wgz
      * @date 2020/10/29
      */
