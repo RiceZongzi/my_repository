@@ -14,6 +14,7 @@ import java.util.Date;
 public class NewTimeAPIDemo {
 
     private static final LocalDate NATIONAL_DAY = LocalDate.of(1949, 10, 1);
+    private static final LocalDateTime NATIONAL_BIRTHDAY = LocalDateTime.of(1949, 10, 1, 15, 0, 0, 0);
 
 
     public static void main(String[] args) {
@@ -23,7 +24,66 @@ public class NewTimeAPIDemo {
 //        construction();
 //        compare();
 //        change();
-        formatter();
+//        formatter();
+        period();
+    }
+
+    /**
+     * 日期时间差
+     * @author wgz
+     * @date 2020/10/29
+     */
+    private static void period() {
+        // 在Java8中，我们可以
+        // 使用
+        //      java.time.Period
+        // 类来计算日期差异。
+        // 主要是通过方法 getYears()，getMonths() 和 getDays() 来计算。
+        // 只能精确到年月日。
+        LocalDate today = LocalDate.now();
+        // 计算间隔的时候是第二个参数减第一个参数
+        // 即，靠前的日期先传，靠后的日期后传
+        Period period = Period.between(NATIONAL_DAY, today);
+        System.out.printf("年龄 : %d 年 %d 月 %d 日 \n", period.getYears(), period.getMonths(), period.getDays());
+
+        // 使用
+        //      java.time.Duration
+        // 类来计算日期差异。
+        // 用于 LocalDateTime 之间的运算，也可用于 Instant 之间的运算。
+        // 计算顺序同 Period.between()
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(NATIONAL_BIRTHDAY, now);
+        // 两个时间差的天数
+        System.out.println(duration.toDays());
+        // 两个时间差的小时数
+        System.out.println(duration.toHours());
+        // 两个时间差的分钟数
+        System.out.println(duration.toMinutes());
+        // 两个时间差的毫秒数
+        System.out.println(duration.toMillis());
+        // 两个时间差的纳秒数
+        System.out.println(duration.toNanos());
+
+        // 使用
+        //      java.time.temporal.ChronoUnit
+        // 可用于在单个时间单位内测量一段时间，
+        // 这个工具类是最全的了，
+        // 可以用于比较所有的时间单位。
+        System.out.println("相差的年数：" + ChronoUnit.YEARS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的月数：" + ChronoUnit.MONTHS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的周数：" + ChronoUnit.WEEKS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的天数：" + ChronoUnit.DAYS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的时数：" + ChronoUnit.HOURS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的分数：" + ChronoUnit.MINUTES.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的秒数：" + ChronoUnit.SECONDS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的毫秒数：" + ChronoUnit.MILLIS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的微秒数：" + ChronoUnit.MICROS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的纳秒数：" + ChronoUnit.NANOS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的半天数：" + ChronoUnit.HALF_DAYS.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的十年数：" + ChronoUnit.DECADES.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的世纪（百年）数：" + ChronoUnit.CENTURIES.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的千年数：" + ChronoUnit.MILLENNIA.between(NATIONAL_BIRTHDAY, now));
+        System.out.println("相差的纪元数：" + ChronoUnit.ERAS.between(NATIONAL_BIRTHDAY, now));
     }
 
     /**
