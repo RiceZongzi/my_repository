@@ -41,8 +41,10 @@ public class NashronDemo {
 //        hello();
 //        javaCallJavascript();
 //        javascriptCallJava();
-        extend("JavaIntArray.js");
-        extend("JavaList.js");
+//        extend("JavaIntArray.js");
+//        extend("JavaList.js");
+        extend("LambdaAndStream.js");
+        extend("JavaExtends.js");
     }
 
     /**
@@ -57,6 +59,14 @@ public class NashronDemo {
      *     可以使用任何Java集合
      *     首先需要通过Java.type定义Java类型，之后创建新的实例
      *     为了迭代集合和数组，Nashron引入了for each语句它，就像Java的范围遍历那样工作。
+     *     一些类似java.util的包可以不使用java.type或JavaImporter直接访问
+     * Lambda和Stream
+     *     虽然ECMAScript 5.1没有Java8 lmbda表达式的简化箭头语法，
+     *     但是可以在任何接受lambda表达式的地方使用函数字面值。
+     * Extends
+     *     Java类型可以由Java.extend轻易扩展。使用线程创建作为例子。
+     * 等等。
+     * 参考：https://www.jianshu.com/p/467aaf5254f8
      *
      * @throws URISyntaxException
      * @throws FileNotFoundException
