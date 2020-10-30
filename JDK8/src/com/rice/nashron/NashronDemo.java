@@ -1,11 +1,15 @@
 package com.rice.nashron;
 
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author wgz
@@ -29,9 +33,49 @@ public class NashronDemo {
         newEngine = new ScriptEngineManager().getEngineByName("Nashorn");
     }
 
-    public static void main(String[] args) throws ScriptException, FileNotFoundException, URISyntaxException {
+    public static void main(String[] args) throws ScriptException, FileNotFoundException, URISyntaxException, NoSuchMethodException {
 
-        hello();
+//        hello();
+        javaCallJavascript();
+    }
+
+    /**
+     * 在Java中调用JavaScript函数
+     * @author wgz
+     * @date 2020/10/30
+     * @throws ScriptException
+     * @throws FileNotFoundException
+     * @throws URISyntaxException
+     * @throws NoSuchMethodException
+     */
+    private static void javaCallJavascript() throws ScriptException, FileNotFoundException,
+            URISyntaxException, NoSuchMethodException {
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
+        engine.eval(new FileReader(String.valueOf(NashronDemo.class
+                .getResource("js" + FILE_SEPARATOR + "JavaCallJavaScript.js")
+                .toURI().getPath())));
+        // 为了调用函数，首先需要将脚本引擎转换为Invocable
+        // Invocable接口由NashornScriptEngine实现，
+        // 并且定义了invokeFunction方法来调用指定名称的JavaScript函数。
+        Invocable invocable = (Invocable) engine;
+        // 第一个参数为Javascript函数名，第二个参数为传入参数
+        // Jdk8的Nashorn是基于ES5.1的，不支持let和const
+        // Jdk9的Nashorn是基于ES6的。
+        Object result = invocable.invokeFunction("welcome", "Peter Parker");
+        System.out.println(result);
+        // 返回 class java.lang.String
+        System.out.println(result.getClass());
+        // Java对象在传入时不会在JavaScript端损失任何类型信息。
+        // 由于脚本在JVM上原生运行，
+        // 我们可以在Nashron上使用Java API或外部库的全部功能。
+        // 返回 object java.time.LocalDateTime
+        System.out.println(invocable.invokeFunction("jsClass", LocalDateTime.now()));
+        // 返回 object java.util.Date
+        System.out.println(invocable.invokeFunction("jsClass", new Date()));
+        // 返回 object [I
+        System.out.println(invocable.invokeFunction("jsClass", new int[]{}));
+        // 返回 object java.util.Optional
+        System.out.println(invocable.invokeFunction("jsClass", Optional.empty()));
     }
 
     private static void hello() throws ScriptException, FileNotFoundException, URISyntaxException {
