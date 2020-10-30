@@ -42,3 +42,7 @@
 
 # Nashorn, JavaScript 引擎 
 - Java 8提供了一个新的Nashorn javascript引擎，它允许我们在JVM上运行特定的javascript应用。
+
+从 JDK 1.8 开始，Nashorn取代Rhino(JDK 1.6, JDK1.7) 成为 Java 的嵌入式 JavaScript 引擎。Nashorn 完全支持 ECMAScript 5.1 规范以及一些扩展。
+它使用基于 JSR 292 的新语言特性，其中包含在 JDK 7 中引入的 invokedynamic，将 JavaScript 编译成 Java 字节码。与先前的 Rhino 实现相比，这带来了 2 到 10倍的性能提升。
+Nashorn JavaScript Engine 在 Java 15 已经不可用了。
