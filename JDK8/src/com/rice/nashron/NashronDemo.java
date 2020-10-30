@@ -1,5 +1,7 @@
 package com.rice.nashron;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -8,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
@@ -66,6 +69,26 @@ public class NashronDemo {
         System.out.format("Hi there from Java, %s\n", name);
         return "Greetings from java!";
     }
+
+    /**
+     * JavaScript原始类型转换为合适的Java包装类，而JavaScript原生对象会使用内部的适配器类来表示。
+     * 要记住jdk.nashorn.internal中的类可能会有所变化，所以不应该在客户端面向这些类来编程。
+     */
+    public static void javaClass (Object object) {
+        System.out.println(object.getClass());
+    }
+
+    /**
+     * 在向Java传递原生JavaScript对象时，可以使用ScriptObjectMirror类，
+     * 它实际上是底层JavaScript对象的Java表示。
+     * ScriptObjectMirror实现了Map接口，位于jdk.nashorn.api中。
+     * 这个包中的类可以用于客户端代码。
+     */
+    public static void javaClass2 (ScriptObjectMirror mirror) {
+        System.out.println(mirror.getClassName() + ": " +
+                Arrays.toString(mirror.getOwnKeys(true)));
+    }
+
     /**
      * 在Java中调用JavaScript函数
      * @author wgz
