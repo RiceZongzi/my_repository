@@ -36,9 +36,36 @@ public class NashronDemo {
     public static void main(String[] args) throws ScriptException, FileNotFoundException, URISyntaxException, NoSuchMethodException {
 
 //        hello();
-        javaCallJavascript();
+//        javaCallJavascript();
+        javascriptCallJava();
     }
 
+    /**
+     * 在JavaScript中调用Java函数
+     * @author wgz
+     * @date 2020/10/30
+     * @throws URISyntaxException
+     * @throws FileNotFoundException
+     * @throws ScriptException
+     */
+    private static void javascriptCallJava() throws URISyntaxException,
+            FileNotFoundException, ScriptException {
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
+        engine.eval(new FileReader(String.valueOf(NashronDemo.class
+                .getResource("js" + FILE_SEPARATOR + "JavaScriptCallJava.js")
+                .toURI().getPath())));
+    }
+
+    /**
+     * Java类可以通过Java.typeAPI扩展在JavaScript中引用。
+     * 它就和Java代码中的import类似。
+     * 只要定义了Java类型，我们就可以自然地调用静态方法welcome(String name)，
+     * 然后像sout打印信息。由于方法是静态的，我们不需要首先创建实例。
+     */
+    public static String welcome(String name) {
+        System.out.format("Hi there from Java, %s\n", name);
+        return "Greetings from java!";
+    }
     /**
      * 在Java中调用JavaScript函数
      * @author wgz
@@ -61,7 +88,7 @@ public class NashronDemo {
         // 第一个参数为Javascript函数名，第二个参数为传入参数
         // Jdk8的Nashorn是基于ES5.1的，不支持let和const
         // Jdk9的Nashorn是基于ES6的。
-        Object result = invocable.invokeFunction("welcome", "Peter Parker");
+        Object result = invocable.invokeFunction("welcome", "Rice");
         System.out.println(result);
         // 返回 class java.lang.String
         System.out.println(result.getClass());
