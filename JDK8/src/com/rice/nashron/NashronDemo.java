@@ -35,10 +35,17 @@ public class NashronDemo {
     }
 
     private static void hello() throws ScriptException, FileNotFoundException, URISyntaxException {
+        long beginOld = System.currentTimeMillis();
         oldEngine.eval("print('Hello World!');");
+        long afterOld = System.currentTimeMillis();
         newEngine.eval("print('Hello World!');");
+        long afterNew = System.currentTimeMillis();
+        // 统计耗时
+        System.out.println("Old: " + (afterOld - beginOld) + " milliseconds");
+        System.out.println("New: " + (afterNew - afterOld) + " milliseconds");
         newEngine.eval(new FileReader(String.valueOf(NashronDemo.class
-                .getResource("js/hello.js")
+                // 跨平台使用，操作系统不同，分隔符不同
+                .getResource("js" + FILE_SEPARATOR + "hello.js")
                 // 路径中有 %20 等的时候的处理方式，是空格中文等，引起的
                 .toURI().getPath())));
     }
