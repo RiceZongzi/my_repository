@@ -40,7 +40,33 @@ public class NashronDemo {
 
 //        hello();
 //        javaCallJavascript();
-        javascriptCallJava();
+//        javascriptCallJava();
+        extend("JavaIntArray.js");
+        extend("JavaList.js");
+    }
+
+    /**
+     * @author wgz
+     * @date 2020/10/30
+     * 数组
+     *     JavaScript的原生数组是无类型的
+     *     Nashron允许在JavaScript中使用Java的类型数组
+     *     int[]数组就像真实的Java整数数组那样
+     *     我们试图向数组添加非整数时，Nashron在背后执行了一些隐式的转换，字符串会自动转换为整数
+     * 集合
+     *     可以使用任何Java集合
+     *     首先需要通过Java.type定义Java类型，之后创建新的实例
+     *     为了迭代集合和数组，Nashron引入了for each语句它，就像Java的范围遍历那样工作。
+     *
+     * @throws URISyntaxException
+     * @throws FileNotFoundException
+     * @throws ScriptException
+     */
+    private static void extend(String filename) throws URISyntaxException,
+            FileNotFoundException, ScriptException {
+        newEngine.eval(new FileReader(String.valueOf(NashronDemo.class
+                .getResource("js" + FILE_SEPARATOR + filename)
+                .toURI().getPath())));
     }
 
     /**
@@ -53,8 +79,7 @@ public class NashronDemo {
      */
     private static void javascriptCallJava() throws URISyntaxException,
             FileNotFoundException, ScriptException {
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
-        engine.eval(new FileReader(String.valueOf(NashronDemo.class
+        newEngine.eval(new FileReader(String.valueOf(NashronDemo.class
                 .getResource("js" + FILE_SEPARATOR + "JavaScriptCallJava.js")
                 .toURI().getPath())));
     }
@@ -100,14 +125,13 @@ public class NashronDemo {
      */
     private static void javaCallJavascript() throws ScriptException, FileNotFoundException,
             URISyntaxException, NoSuchMethodException {
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("Nashorn");
-        engine.eval(new FileReader(String.valueOf(NashronDemo.class
+        newEngine.eval(new FileReader(String.valueOf(NashronDemo.class
                 .getResource("js" + FILE_SEPARATOR + "JavaCallJavaScript.js")
                 .toURI().getPath())));
         // 为了调用函数，首先需要将脚本引擎转换为Invocable
         // Invocable接口由NashornScriptEngine实现，
         // 并且定义了invokeFunction方法来调用指定名称的JavaScript函数。
-        Invocable invocable = (Invocable) engine;
+        Invocable invocable = (Invocable) newEngine;
         // 第一个参数为Javascript函数名，第二个参数为传入参数
         // Jdk8的Nashorn是基于ES5.1的，不支持let和const
         // Jdk9的Nashorn是基于ES6的。
