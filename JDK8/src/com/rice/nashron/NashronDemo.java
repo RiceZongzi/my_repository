@@ -43,8 +43,51 @@ public class NashronDemo {
 //        javascriptCallJava();
 //        extend("JavaIntArray.js");
 //        extend("JavaList.js");
-        extend("LambdaAndStream.js");
-        extend("JavaExtends.js");
+//        extend("LambdaAndStream.js");
+//        extend("JavaExtends.js");
+        compare("100 + (12.5 - 7) * 3/4");
+    }
+
+    /**
+     *
+     * @date 2020/10/30
+     * @param strExpress String类型公式
+     * @return java.lang.Double
+     */
+    public static Double getResult(String strExpress){
+        Double number = null;
+        try{
+            number = Double.valueOf(newEngine.eval(strExpress).toString());
+            // is Not a Number
+            if (Double.isNaN(number)) {
+                number = 0.0;
+                // ±∞
+            } else if (Double.isInfinite(number)) {
+                number = 0.0;
+            }
+        }catch(Exception t){
+            t.printStackTrace();
+            System.err.println("字符串型公式有误，请检查！");
+        }
+        return number;
+    }
+
+    private static void compare(String express) {
+        Double oldNum = null;
+        Double newNum = null;
+        try {
+            long beginOld = System.currentTimeMillis();
+            oldNum = Double.valueOf(oldEngine.eval(express).toString());
+            long afterOld = System.currentTimeMillis();
+            newNum = Double.valueOf(newEngine.eval(express).toString());
+            long afterNew = System.currentTimeMillis();
+            // 统计耗时
+            System.out.println("Old: " + (afterOld - beginOld) + " milliseconds and result：" + oldNum);
+            System.out.println("New: " + (afterNew - afterOld) + " milliseconds and result：" + newNum);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("字符串型公式有误，请检查！");
+        }
     }
 
     /**
