@@ -123,6 +123,7 @@ from student s
          join score sc2 on s.s_id = sc2.s_id and sc2.c_id = '02'
 where sc1.s_score < sc2.s_score;
 -- 3、查询平均成绩大于等于60分的同学的学生编号和学生姓名和平均成绩
+-- 1)
 select s.*, sc1.s_score, round(avg(sc1.s_score), 2)
 from student s,
      score sc1
@@ -130,6 +131,7 @@ where s.s_id = sc1.s_id
 group by s.s_id, s.s_name
 having round(avg(sc1.s_score), 2) >= 60;
 -- 隐式连接，其实是一回事儿
+-- 2)
 select s.s_id, s.s_name, ROUND(AVG(sc1.s_score), 2)
 from student s
          join score sc1 on s.s_id = sc1.s_id
@@ -177,12 +179,13 @@ where s_id not in (select s.s_id
                                    left join teacher t on c.t_id = t.t_id
                           where t.t_name = '张三'));
 -- 9、查询学过编号为"01"并且也学过编号为"02"的课程的同学的信息
+-- 1) 比较扯淡，没啥代表性，也没啥思路可归纳
 select s.*
 from student s
          left join (select * from score where c_id in ('01', '02')) sc on s.s_id = sc.s_id
 group by s.s_id
 having count(s.s_id) = 2;
-
+-- 2)
 select s.*
 from student s,
      score sc1,
@@ -191,14 +194,14 @@ where s.s_id = sc1.s_id
   and s.s_id = sc2.s_id
   and sc1.c_id = '01'
   and sc2.c_id = '02';
-
+-- 3)
 select s.*
 from student s
          left join score sc1 on s.s_id = sc1.s_id
          left join score sc2 on s.s_id = sc2.s_id
 where sc1.c_id = '01'
   and sc2.c_id = '02';
-
+-- 4) 按照这个sql思路，下一题变迎刃而解
 select s.*
 from student s
 where s.s_id in (select sc1.s_id from score sc1 where sc1.c_id = '01')
@@ -215,8 +218,87 @@ from student s
 group by s.s_id
 having count(s.s_id) < (select count(c.c_id) from course c);
 -- 12、查询至少有一门课与学号为"01"的同学所学相同的同学的信息
+-- 1)
+select distinct s.*
+from student s
+         left join score sc2 on s.s_id = sc2.s_id
+where sc2.c_id in (select sc1.c_id from score sc1 where sc1.s_id = '01');
+-- 2) 这个不用联表，更好一点
+select *
+from student
+where s_id in (
+    select distinct a.s_id
+    from score a
+    where a.c_id in (
+        select a.c_id
+        from score a
+        where a.s_id = '01')
+);
 -- 13、查询和"01"号的同学学习的课程完全相同的其他同学的信息
+-- 1)
+SELECT Student.*
+FROM Student
+WHERE s_id IN (SELECT s_id
+               FROM Score
+               GROUP BY s_id
+               HAVING COUNT(s_id) = (
+                   #下面的语句是找到'01'同学学习的课程数
+                   SELECT COUNT(c_id)
+                   FROM Score
+                   WHERE s_id = '01'
+               )
+)
+  AND s_id NOT IN (
+    #下面的语句是找到学过‘01’同学没学过的课程，有哪些同学。并排除他们
+    SELECT s_id
+    FROM Score
+    WHERE c_id IN (
+        #下面的语句是找到‘01’同学没学过的课程
+        SELECT DISTINCT c_id
+        FROM Score
+        WHERE c_id NOT IN (
+            #下面的语句是找出‘01’同学学习的课程
+            SELECT c_id
+            FROM Score
+            WHERE s_id = '01'
+        )
+    )
+    GROUP BY s_id
+) #下面的条件是排除01同学
+  AND s_id NOT IN ('01');
+-- 2) 没看懂，group_concat()将group by产生的同一个分组中的值连接起来，返回一个字符串结果
+SELECT t3.*
+FROM (
+         SELECT s_id,
+                group_concat(c_id ORDER BY c_id) group1
+         FROM score
+         WHERE s_id <> '01'
+         GROUP BY s_id
+     ) t1
+         INNER JOIN (
+    SELECT group_concat(c_id ORDER BY c_id) group2
+    FROM score
+    WHERE s_id = '01'
+    GROUP BY s_id
+) t2 ON t1.group1 = t2.group2
+         INNER JOIN student t3 ON t1.s_id = t3.s_id;
 -- 14、查询没学过"张三"老师讲授的任一门课程的学生姓名
+select s.s_name
+from student s
+# 不在此列之学生姓名
+where s.s_id not in (
+    # 选张三考试之课之学生id
+    select distinct sc.s_id
+    from score sc
+    where sc.c_id in (
+        # 张三老师所教之课
+        select c.c_id
+        from course c
+        where c.t_id in (
+            # 名为张三老师之id
+            select t.t_id
+            from teacher t
+            where t.t_name = '张三')));
 -- 15、查询两门及其以上不及格课程的同学的学号，姓名及其平均成绩
 -- 16、检索"01"课程分数小于60，按分数降序排列的学生信息
 -- 17、按平均成绩从高到低显示所有学生的所有课程的成绩以及平均成绩
