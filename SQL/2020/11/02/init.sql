@@ -1,5 +1,5 @@
  -- 2020/11/02
- use springbootdemo;
+ -- use springbootdemo;
 
  -- init
  -- 建表
