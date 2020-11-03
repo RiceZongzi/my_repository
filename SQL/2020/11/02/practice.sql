@@ -312,8 +312,16 @@ where s.s_id not in (
 -- 25、查询各科成绩前三名的记录
 -- 26、查询每门课程被选修的学生数
 -- 27、查询出只有两门课程的全部学生的学号和姓名
+select s.s_id, s.s_name
+from student s
+         left join score sc on s.s_id = sc.s_id
+group by s.s_id, s.s_name
+having count(sc.s_score) = 2;
 -- 28、查询男生、女生人数
 -- 29、查询名字中含有"风"字的学生信息
+select *
+from student s
+where s.s_name like '%风%';
 -- 30、查询同名同性学生名单，并统计同名人数
 -- 31、查询1990年出生的学生名单
 -- 32、查询每门课程的平均成绩，结果按平均成绩降序排列，平均成绩相同时，按课程编号升序排列
