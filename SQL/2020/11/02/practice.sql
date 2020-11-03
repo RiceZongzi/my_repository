@@ -124,22 +124,22 @@ from student s
 where sc1.s_score < sc2.s_score;
 -- 3、查询平均成绩大于等于60分的同学的学生编号和学生姓名和平均成绩
 -- 1)
-select s.*, sc1.s_score, round(avg(sc1.s_score), 2)
+select s.*, sc.s_score, round(avg(sc.s_score), 2)
 from student s,
-     score sc1
-where s.s_id = sc1.s_id
+     score sc
+where s.s_id = sc.s_id
 group by s.s_id, s.s_name
-having round(avg(sc1.s_score), 2) >= 60;
+having round(avg(sc.s_score), 2) >= 60;
 -- 隐式连接，其实是一回事儿
 -- 2)
-select s.s_id, s.s_name, ROUND(AVG(sc1.s_score), 2)
+select s.s_id, s.s_name, round(avg(sc.s_score), 2)
 from student s
-         join score sc1 on s.s_id = sc1.s_id
-GROUP BY s.s_id, s.s_name
-HAVING ROUND(AVG(sc1.s_score), 2) >= 60;
+         join score sc on s.s_id = sc.s_id
+group by s.s_id, s.s_name
+having round(avg(sc.s_score), 2) >= 60;
 -- 4、查询平均成绩小于60分的同学的学生编号和学生姓名和平均成绩
 -- (包括有成绩的和无成绩的)
-select s.s_id, s.s_name, ROUND(AVG(sc.s_score), 2) as avg_score
+select s.s_id, s.s_name, round(avg(sc.s_score), 2) as avg_score
 from student s
          left join score sc on s.s_id = sc.s_id
 group by s.s_id, s.s_name
@@ -154,7 +154,7 @@ where s.s_id not in (select distinct s_id from score);
 select s.s_id, s.s_name, count(sc.s_id), sum(sc.s_score)
 from student s
          left join score sc on s.s_id = sc.s_id
-group by s.s_id;
+group by s.s_id, s.s_name;
 -- 6、查询"李"姓老师的数量
 select count(t.t_id)
 from teacher t
@@ -300,17 +300,193 @@ where s.s_id not in (
             from teacher t
             where t.t_name = '张三')));
 -- 15、查询两门及其以上不及格课程的同学的学号，姓名及其平均成绩
+select s.s_id, s.s_name, avg(sc2.s_score)
+from student s
+         left join score sc2 on s.s_id = sc2.s_id
+where s.s_id in (
+    select sc1.s_id from score sc1 where sc1.s_score < 60 group by sc1.s_id having count(sc1.s_id) >= 2)
+group by s.s_id, s.s_name;
 -- 16、检索"01"课程分数小于60，按分数降序排列的学生信息
+select s.*, sc.s_score
+from student s,
+     score sc
+where sc.c_id = '01'
+  and sc.s_id = s.s_id
+order by sc.s_score desc;
 -- 17、按平均成绩从高到低显示所有学生的所有课程的成绩以及平均成绩
+select s.s_id,
+       (select sc.s_score from score sc where sc.c_id = '01' and sc.s_id = s.s_id) as 语文,
+       (select sc.s_score from score sc where sc.c_id = '02' and sc.s_id = s.s_id) as 数学,
+       (select sc.s_score from score sc where sc.c_id = '03' and sc.s_id = s.s_id) as 英语,
+       round(avg(s.s_score), 2)                                                    as 平均分
+from score s
+group by s.s_id
+order by 平均分;
 -- 18.查询各科成绩最高分、最低分和平均分：以如下形式显示：课程ID，课程name，最高分，最低分，平均分，及格率，中等率，优良率，优秀率
+-- 1)
+select s.c_id,
+       c.c_name,
+       max(s_score)                                          as 最高分,
+       min(s_score)                                          as 最低分,
+       round(avg(s_score), 2)                                as 平均分,
+       round(100 * (sum(case when s.s_score >= 60 then 1 else 0 end)
+           / sum(case when s.s_score then 1 else 0 end)), 2) as 及格率,
+       round(100 * (sum(case when s.s_score >= 70 and s.s_score <= 80 then 1 else 0 end)
+           / sum(case when s.s_score then 1 else 0 end)), 2) as 中等率,
+       round(100 * (sum(case when s.s_score >= 80 and s.s_score <= 90 then 1 else 0 end)
+           / sum(case when s.s_score then 1 else 0 end)), 2) as 优良率,
+       round(100 * (sum(case when s.s_score >= 90 then 1 else 0 end)
+           / sum(case when s.s_score then 1 else 0 end)), 2) as 优秀率
+from score s
+         left join course c on s.c_id = c.c_id
+GROUP BY s.c_id, c.c_name;
+-- 2)
+select s.c_id,
+       c.c_name,
+       max(s_score)                        as 最高分,
+       min(s_score)                        as 最低分,
+       round(avg(s_score), 2)              as 平均分,
+       round(100 * (sum(if(s.s_score >= 60, 1, 0))
+           / sum(if(s.s_score, 1, 0))), 2) as 及格率,
+       round(100 * (sum(if(s.s_score >= 70 and s.s_score <= 80, 1, 0))
+           / sum(if(s.s_score, 1, 0))), 2) as 中等率,
+       round(100 * (sum(if(s.s_score >= 80 and s.s_score <= 90, 1, 0))
+           / sum(if(s.s_score, 1, 0))), 2) as 优良率,
+       round(100 * (sum(if(s.s_score >= 90, 1, 0))
+           / sum(if(s.s_score, 1, 0))), 2) as 优秀率
+from score s
+         left join course c on s.c_id = c.c_id
+GROUP BY s.c_id, c.c_name;
 -- 19、按各科成绩进行排序，并显示排名
+-- 1) 好像不太对
+select a.c_id,
+       a.s_id,
+       @i := @i + 1                                             as i保留排名,
+       @k := (case when @score = a.s_score then @k else @i end) as rank不保留排名,
+       @score := a.s_score                                      as score
+from (
+         select s_id, c_id, s_score from score sc GROUP BY s_id, c_id, s_score ORDER BY s_score DESC
+     ) a,
+     (select @k := 0, @i := 0, @score := 0) s;
+-- 2）稍加修改
+select @i := @i + 1                                             as 序号,
+       a.s_id                                                   as 学号,
+       a.c_id                                                   as 科目,
+       @l := (case when @score = a.s_score then @l else @i end) as 排名,
+       @score := a.s_score                                      as 分数
+from (
+         select sc.s_id, sc.c_id, sc.s_score
+         from score sc
+         where sc.c_id = '01'
+         GROUP BY sc.s_id, sc.c_id, sc.s_score
+         ORDER BY sc.s_score DESC
+     ) a,
+     (select @l := 0, @i := 0, @score := 0) s
+union
+select @j := @j + 1                                             as 序号,
+       a.s_id                                                   as 学号,
+       a.c_id                                                   as 科目,
+       @m := (case when @score = a.s_score then @m else @j end) as 排名,
+       @score := a.s_score                                      as 分数
+from (
+         select sc.s_id, sc.c_id, sc.s_score
+         from score sc
+         where sc.c_id = '02'
+         GROUP BY sc.s_id, sc.c_id, sc.s_score
+         ORDER BY sc.s_score DESC
+     ) a,
+     (select @m := 0, @j := 0, @score := 0) s
+union
+select @k := @k + 1                                             as 序号,
+       a.s_id                                                   as 学号,
+       a.c_id                                                   as 科目,
+       @n := (case when @score = a.s_score then @n else @k end) as 排名,
+       @score := a.s_score                                      as 分数
+from (
+         select sc.s_id, sc.c_id, sc.s_score
+         from score sc
+         where sc.c_id = '03'
+         GROUP BY sc.s_id, sc.c_id, sc.s_score
+         ORDER BY sc.s_score DESC
+     ) a,
+     (select @n := 0, @k := 0, @score := 0) s;
 -- 20、查询学生的总成绩并进行排名
+select @i := @i + 1                                               as 序号,
+       a.s_id                                                     as 学号,
+       @k := (case when @score = a.sum_score then @k else @i end) as 排名,
+       @score := a.sum_score                                      as 总分
+from (select sc.s_id, SUM(sc.s_score) as sum_score from score sc GROUP BY sc.s_id ORDER BY sum_score DESC) a,
+     (select @k := 0, @i := 0, @score := 0) s;
 -- 21、查询不同老师所教不同课程平均分从高到低显示
+select t.t_id                                                               as 教师编号,
+       t.t_name                                                             as 教师姓名,
+       c.c_name                                                             as 课程名称,
+       (select round(avg(s.s_score), 2) from score s where c.c_id = s.c_id) as 平均分
+from teacher t
+         left join course c on t.t_id = c.t_id
+order by 平均分 desc;
 -- 22、查询所有课程的成绩第2名到第3名的学生信息及该课程成绩
+-- 1) 不加括号用不了 union，不加 limit 也用不了
+(select s.*, sc.s_score
+ from score sc
+          left join student s on sc.s_id = s.s_id
+ where sc.c_id = '01'
+ order by s_score desc
+ limit 1, 2)
+union
+(select s.*, sc.s_score
+ from score sc
+          left join student s on sc.s_id = s.s_id
+ where sc.c_id = '02'
+ order by s_score desc
+ limit 1, 2)
+union
+(select s.*, sc.s_score
+ from score sc
+          left join student s on sc.s_id = s.s_id
+ where sc.c_id = '03'
+ order by s_score desc
+ limit 1, 2);
 -- 23、统计各科成绩各分数段人数：课程编号,课程名称,[100-85],[85-70],[70-60],[0-60]及所占百分比
+select c.c_id,
+       c.c_name,
+       sum(if(s.s_score < 60, 1, 0))                                                        as `[0-60]`,
+       round(100 * sum(if(s.s_score <= 60, 1, 0)) / count(s.s_score), 2)                    as `[0-60]%`,
+       sum(if(s.s_score >= 60 and s_score <= 70, 1, 0))                                     as `[70-60]`,
+       round(100 * sum(if(s.s_score >= 60 and s_score <= 70, 1, 0)) / count(s.s_score), 2)  as `[70-60]%`,
+       sum(if(s.s_score >= 70 and s_score <= 85, 1, 0))                                     as `[85-70]`,
+       round(100 * sum(if(s.s_score >= 70 and s_score <= 85, 1, 0)) / count(s.s_score), 2)  as `[85-70]%`,
+       sum(if(s.s_score >= 85 and s_score <= 100, 1, 0))                                    as `[100-85]`,
+       round(100 * sum(if(s.s_score >= 85 and s_score <= 100, 1, 0)) / count(s.s_score), 2) as `[100-85]%`
+from course c
+         left join score s on c.c_id = s.c_id
+group by c.c_id, c.c_name;
 -- 24、查询学生平均成绩及其名次
+-- 1) 查询学生平均成绩
+select s.s_id,
+       s.s_name,
+       avg(sc.s_score)
+from student s
+         left join score sc on s.s_id = sc.s_id
+group by s.s_id, s_name;
+-- 2) 查询学生平均成绩及其名次
+select @i := @i + 1                             as 序号,
+       a.s_id                                   as 学号,
+       @score := a.avg_score                    as 平均成绩,
+       @k := (if(@score = a.avg_score, @k, @i)) as 排名
+from (select sc.s_id, avg(sc.s_score) as avg_score from score sc group by sc.s_id order by avg_score desc) a,
+     (select @k := 0, @i := 0, @score := 0) s;
 -- 25、查询各科成绩前三名的记录
+(select * from score sc where sc.c_id = '01' order by s_score desc limit 0, 3)
+union
+(select * from score sc where sc.c_id = '02' order by s_score desc limit 0, 3)
+union
+(select * from score sc where sc.c_id = '03' order by s_score desc limit 0, 3);
 -- 26、查询每门课程被选修的学生数
+select c.c_id, c.c_name, count(s.s_id)
+from course c
+         left join score s on c.c_id = s.c_id
+group by c.c_id, c.c_name;
 -- 27、查询出只有两门课程的全部学生的学号和姓名
 select s.s_id, s.s_name
 from student s
@@ -318,6 +494,9 @@ from student s
 group by s.s_id, s.s_name
 having count(sc.s_score) = 2;
 -- 28、查询男生、女生人数
+select sum(if(s_sex = '男', 1, 0)) as boy,
+       sum(if(s_sex = '女', 1, 0)) as girl
+from student;
 -- 29、查询名字中含有"风"字的学生信息
 select *
 from student s
