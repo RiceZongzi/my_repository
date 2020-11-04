@@ -502,23 +502,165 @@ select *
 from student s
 where s.s_name like '%风%';
 -- 30、查询同名同性学生名单，并统计同名人数
+-- 1)
+select s.s_name, s.s_sex, count(s.s_name)
+from (select s1.s_name, s1.s_sex
+      from student s1,
+           student s2
+      where s1.s_name = s2.s_name
+        and s1.s_sex = s2.s_sex
+        and s1.s_id <> s2.s_id
+      group by s1.s_name, s1.s_sex) s;
+-- 2)
+select a.s_name, a.s_sex, count(*)
+from student a
+         JOIN student b on a.s_id != b.s_id and a.s_name = b.s_name and a.s_sex = b.s_sex
+GROUP BY a.s_name, a.s_sex;
 -- 31、查询1990年出生的学生名单
+select *
+from student s
+where s.s_birth like '1990-%';
 -- 32、查询每门课程的平均成绩，结果按平均成绩降序排列，平均成绩相同时，按课程编号升序排列
+select s.c_id, avg(s.s_score)
+from score s
+group by s.c_id
+order by avg(s.s_score) desc, s.c_id asc;
 -- 33、查询平均成绩大于等于85的所有学生的学号、姓名和平均成绩
+select s.s_id, s.s_name, avg(sc.s_score)
+from student s
+         left join score sc on s.s_id = sc.s_id
+group by s.s_id, s.s_name
+having avg(sc.s_score) > 85;
 -- 34、查询课程名称为"数学"，且分数低于60的学生姓名和分数
+-- 1)
+select s.s_name, sc.s_score
+from student s,
+     score sc,
+     course c
+where sc.s_id = s.s_id
+  and c.c_id = sc.c_id
+  and c.c_name = '数学'
+  and sc.s_score < 60;
+-- 2)
+select a.s_name, b.s_score
+from score b
+         join student a on a.s_id = b.s_id
+where b.c_id = (
+    select c_id
+    from course
+    where c_name = '数学')
+  and b.s_score < 60;
 -- 35、查询所有学生的课程及分数情况；
+select s.s_id,
+       s.s_name,
+       sum(if(c.c_name = '语文', sc.s_score, 0)) as '语文',
+       sum(if(c.c_name = '数学', sc.s_score, 0)) as '数学',
+       sum(if(c.c_name = '英语', sc.s_score, 0)) as '英语',
+       sum(sc.s_score)                         as '总分'
+from student s
+         left join score sc on s.s_id = sc.s_id
+         left join course c on sc.c_id = c.c_id
+GROUP BY s.s_id, s.s_name;
 -- 36、查询任何一门课程成绩在70分以上的姓名、课程名称和分数；
+select s.s_name                                               as '姓名',
+       (select c.c_name from course c where c.c_id = sc.c_id) as '课程名称',
+       sc.s_score                                             as '分数'
+from score sc
+         left join student s on sc.s_id = s.s_id
+where sc.s_score > 70;
 -- 37、查询不及格的课程
+select s.s_id, c.c_name, s.s_score
+from score s
+         left join course c on s.c_id = c.c_id
+where s.s_score < 60;
 -- 38、查询课程编号为01且课程成绩在80分以上的学生的学号和姓名；
+select s.s_id, s.s_name
+from score sc,
+     student s
+where sc.s_id = s.s_id
+  and sc.c_id = '01'
+  and sc.s_score > 80;
 -- 39、求每门课程的学生人数
+select sc.c_id,
+       count(sc.s_score) as 选课人数
+from score sc
+group by sc.c_id;
 -- 40、查询选修"张三"老师所授课程的学生中，成绩最高的学生信息及其成绩
+select *
+from score sc
+         left join student s on s.s_id = sc.s_id
+where sc.c_id in (
+    select c.c_id
+    from course c
+    where t_id in (
+        select t.t_id
+        from teacher t
+        where t.t_name = '张三'));
 -- 41、查询不同课程成绩相同的学生的学生编号、课程编号、学生成绩
+select distinct sc1.s_id, sc1.c_id, sc1.s_score
+from score sc1,
+     score sc2
+where sc1.c_id <> sc2.c_id
+  and sc1.s_score = sc2.s_score;
 -- 42、查询每门功成绩最好的前两名
+-- 1) ???
+select a.s_id, a.c_id, a.s_score
+from score a
+where (select COUNT(1) from score b where b.c_id = a.c_id and b.s_score >= a.s_score) <= 2
+ORDER BY a.c_id;
+-- 2) 上面这个大sql，把我看傻了
+(select * from score sc where sc.c_id = '01' order by s_score desc limit 0, 2)
+union
+(select * from score sc where sc.c_id = '02' order by s_score desc limit 0, 2)
+union
+(select * from score sc where sc.c_id = '03' order by s_score desc limit 0, 2);
 -- 43、统计每门课程的学生选修人数（超过5人的课程才统计）。要求输出课程号和选修人数，查询结果按人数降序排列，若人数相同，按课程号升序排列
+select c.c_id, count(s.s_score)
+from course c
+         left join score s on c.c_id = s.c_id
+group by c.c_id
+having count(s.s_score) > 5
+order by count(s.s_score) desc, c.c_id asc;
 -- 44、检索至少选修两门课程的学生学号
+select sc.s_id
+from score sc
+group by sc.s_id
+having count(sc.s_score) >= 2;
 -- 45、查询选修了全部课程的学生信息
+select s.*
+from score sc
+         left join student s on sc.s_id = s.s_id
+group by sc.s_id
+having count(sc.s_score) = (select count(c.c_id) from course c);
 -- 46、查询各学生的年龄
+-- 1) 时间测试sql
+select now(),
+       current_date(),
+       current_time(),
+       date_format(now(), '%Y-%m-%d'),
+       date_format(now(), '%m'),
+       month(current_date),
+       year(current_date),
+       date_format(now(), '%Y-%m-%d %H:%i:%S');
+-- 2)
+select s_birth,
+       (date_format(now(), '%Y') - date_format(s_birth, '%Y') -
+           # 按照出生日期来算，当前月日 < 出生年月的月日则年龄减一
+        (if(date_format(now(), '%m%d') > date_format(s_birth, '%m%d'), 0, 1))) as age
+from student;
 -- 47、查询本周过生日的学生
+select *
+from student
+where week(s_birth) = week(current_date);
 -- 48、查询下周过生日的学生
+select *
+from student
+where week(s_birth) = week(current_date) + 1;
 -- 49、查询本月过生日的学生
+select *
+from student
+where month(s_birth) = month(current_date);
 -- 50、查询下月过生日的学生
+select *
+from student
+where month(s_birth) = month(current_date) + 1;
