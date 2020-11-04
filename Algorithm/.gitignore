@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/$PRODUCT_WORKSPACE_FILE$
+.idea/.gitignore
+.idea/Algorithm.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+Algorithm.iml
