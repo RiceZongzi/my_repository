@@ -488,12 +488,19 @@ from course c
          left join score s on c.c_id = s.c_id
 group by c.c_id, c.c_name;
 -- 27、查询出只有两门课程的全部学生的学号和姓名
-
+select s.s_id, s.s_name
+from student s
+         left join score sc on s.s_id = sc.s_id
+group by s.s_id, s.s_name
+having count(sc.s_score) = 2;
 -- 28、查询男生、女生人数
 select sum(if(s_sex = '男', 1, 0)) as boy,
        sum(if(s_sex = '女', 1, 0)) as girl
 from student;
 -- 29、查询名字中含有"风"字的学生信息
+select *
+from student s
+where s.s_name like '%风%';
 -- 30、查询同名同性学生名单，并统计同名人数
 -- 1)
 select s.s_name, s.s_sex, count(s.s_name)
