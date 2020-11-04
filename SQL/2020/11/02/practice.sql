@@ -1,5 +1,5 @@
 -- 2020/11/02
-use springbootdemo;
+-- use springbootdemo;
 
 -- init
 -- 建表
@@ -581,14 +581,86 @@ where sc.s_id = s.s_id
   and sc.c_id = '01'
   and sc.s_score > 80;
 -- 39、求每门课程的学生人数
+select sc.c_id,
+       count(sc.s_score) as 选课人数
+from score sc
+group by sc.c_id;
 -- 40、查询选修"张三"老师所授课程的学生中，成绩最高的学生信息及其成绩
+select *
+from score sc
+         left join student s on s.s_id = sc.s_id
+where sc.c_id in (
+    select c.c_id
+    from course c
+    where t_id in (
+        select t.t_id
+        from teacher t
+        where t.t_name = '张三'));
 -- 41、查询不同课程成绩相同的学生的学生编号、课程编号、学生成绩
+select distinct sc1.s_id, sc1.c_id, sc1.s_score
+from score sc1,
+     score sc2
+where sc1.c_id <> sc2.c_id
+  and sc1.s_score = sc2.s_score;
 -- 42、查询每门功成绩最好的前两名
+-- 1) ???
+select a.s_id, a.c_id, a.s_score
+from score a
+where (select COUNT(1) from score b where b.c_id = a.c_id and b.s_score >= a.s_score) <= 2
+ORDER BY a.c_id;
+-- 2) 上面这个大sql，把我看傻了
+(select * from score sc where sc.c_id = '01' order by s_score desc limit 0, 2)
+union
+(select * from score sc where sc.c_id = '02' order by s_score desc limit 0, 2)
+union
+(select * from score sc where sc.c_id = '03' order by s_score desc limit 0, 2);
 -- 43、统计每门课程的学生选修人数（超过5人的课程才统计）。要求输出课程号和选修人数，查询结果按人数降序排列，若人数相同，按课程号升序排列
+select c.c_id, count(s.s_score)
+from course c
+         left join score s on c.c_id = s.c_id
+group by c.c_id
+having count(s.s_score) > 5
+order by count(s.s_score) desc, c.c_id asc;
 -- 44、检索至少选修两门课程的学生学号
+select sc.s_id
+from score sc
+group by sc.s_id
+having count(sc.s_score) >= 2;
 -- 45、查询选修了全部课程的学生信息
+select s.*
+from score sc
+         left join student s on sc.s_id = s.s_id
+group by sc.s_id
+having count(sc.s_score) = (select count(c.c_id) from course c);
 -- 46、查询各学生的年龄
+-- 1) 时间测试sql
+select now(),
+       current_date(),
+       current_time(),
+       date_format(now(), '%Y-%m-%d'),
+       date_format(now(), '%m'),
+       month(current_date),
+       year(current_date),
+       date_format(now(), '%Y-%m-%d %H:%i:%S');
+-- 2)
+select s_birth,
+       (date_format(now(), '%Y') - date_format(s_birth, '%Y') -
+           # 按照出生日期来算，当前月日 < 出生年月的月日则年龄减一
+        (if(date_format(now(), '%m%d') > date_format(s_birth, '%m%d'), 0, 1))) as age
+from student;
 -- 47、查询本周过生日的学生
+select *
+from student
+where week(s_birth) = week(current_date);
 -- 48、查询下周过生日的学生
+select *
+from student
+where week(s_birth) = week(current_date) + 1;
 -- 49、查询本月过生日的学生
+select *
+from student
+where month(s_birth) = month(current_date);
 -- 50、查询下月过生日的学生
+select *
+from student
+where month(s_birth) = month(current_date) + 1;
