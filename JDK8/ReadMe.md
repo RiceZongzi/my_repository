@@ -33,6 +33,10 @@ interface GreetingService
 
 # Stream API
 - 新添加的Stream API（java.util.stream） 把真正的函数式编程风格引入到Java中。
+- Stream 使用一种类似用 SQL 语句从数据库查询数据的直观方式来提供一种对 Java 集合运算和表达的高阶抽象。
+- Stream API可以极大提高Java程序员的生产力，让程序员写出高效率、干净、简洁的代码。
+- 这种风格将要处理的元素集合看作一种流， 流在管道中传输， 并且可以在管道的节点上进行处理， 比如筛选， 排序，聚合等。
+- 元素流在管道中经过中间操作（intermediate operation）的处理，最后由最终操作(terminal operation)得到前面处理的结果。
 
 # 方法引用
 - 方法引用提供了非常有用的语法，可以直接引用已有Java类或对象（实例）的方法或构造器。与lambda联合使用，方法引用可以使语言的构造更紧凑简洁，减少冗余代码。
@@ -50,10 +54,16 @@ interface GreetingService
   - **MIME：**输出隐射到MIME友好格式。输出每行不超过76字符，并且使用'\r'并跟随'\n'作为分割。编码输出最后没有行分割。
 
 # Date Time API 
-- 加强对日期与时间的处理。
+- Java 8 在 **java.time** 包下提供了很多新的 API。以下为两个比较重要的 API：
+  - **Local(本地)** − 简化了日期时间的处理，没有时区的问题。
+  - **Zoned(时区)** − 通过制定的时区处理日期时间。
+- 新的java.time包涵盖了所有处理日期，时间，日期/时间，时区，时刻（instants），过程（during）与时钟（clock）的操作。
 
 # Optional 类 
 - Optional 类已经成为 Java 8 类库的一部分，用来解决空指针异常。
+- Optional 类是一个可以为null的容器对象。如果值存在则isPresent()方法会返回true，调用get()方法会返回该对象。
+- Optional 是个容器：它可以保存类型T的值，或者仅仅保存null。Optional提供很多有用的方法，这样我们就不用显式进行空值检测。
+- Optional 类的引入很好的解决空指针异常。
 
 # Nashorn, JavaScript 引擎 
 - `Java 8`提供了一个新的`Nashorn Javascript`引擎，它允许我们在`JVM`上运行特定的`Javascript`应用。`Nashorn`取代`Rhino`成为`Java`的嵌入式 `JavaScript`引擎。
