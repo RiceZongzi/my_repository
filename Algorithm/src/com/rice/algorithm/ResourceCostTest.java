@@ -4,7 +4,7 @@ package com.rice.algorithm;
  * @author wgz
  * create date  2020/11/4 22:16
  */
-public class AlgorithmDemo {
+public class ResourceCostTest {
 
     private static Runtime runtime = Runtime.getRuntime();
 
@@ -20,31 +20,31 @@ public class AlgorithmDemo {
     }
 
     private static void calc1() {
-        long start_ms = System.currentTimeMillis();
-        long start_ns = System.nanoTime();
+        long startMs = System.currentTimeMillis();
+        long startNs = System.nanoTime();
         int sum = 0;
         int n = 100;
         for (int i = 1; i <= n; i++) {
             sum += i;
         }
-        long end_ns = System.nanoTime();
-        long end_ms = System.currentTimeMillis();
+        long endNs = System.nanoTime();
+        long endMs = System.currentTimeMillis();
         System.out.println("Σsum = " + sum);
-        System.out.println("ns:" + (end_ns - start_ns));
-        System.out.println("ms:" + (end_ms - start_ms));
+        System.out.println("ns:" + (endNs - startNs));
+        System.out.println("ms:" + (endMs - startMs));
     }
 
     private static void calc2() {
-        long start_ms = System.currentTimeMillis();
-        long start_ns = System.nanoTime();
+        long startMs = System.currentTimeMillis();
+        long startNs = System.nanoTime();
         int sum = 0;
         int n = 100;
         sum = (n + 1) * n / 2;
-        long end_ns = System.nanoTime();
-        long end_ms = System.currentTimeMillis();
+        long endNs = System.nanoTime();
+        long endMs = System.currentTimeMillis();
         System.out.println("Σsum = " + sum);
-        System.out.println("ns:" + (end_ns - start_ns));
-        System.out.println("ms:" + (end_ms - start_ms));
+        System.out.println("ns:" + (endNs - startNs));
+        System.out.println("ms:" + (endMs - startMs));
     }
 
     private static void memory() {
