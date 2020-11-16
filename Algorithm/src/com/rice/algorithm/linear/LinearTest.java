@@ -36,4 +36,38 @@ public class LinearTest {
 
         list.forEach(System.out::println);
     }
+
+    @Test
+    public void sequenceListTest3() {
+        SequenceList<Integer> list = new SequenceList<>(4);
+        list.insert(0);
+        list.insert(1);
+        list.insert(2);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.insert(3);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.insert(4);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.insert(4);
+        list.insert(4);
+        list.insert(4);
+        list.insert(4);
+        list.insert(4);
+        list.insert(4);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.remove(0);
+        list.remove(0);
+        list.remove(0);
+        list.remove(0);
+        list.remove(0);
+        list.remove(0);
+        list.remove(0);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.remove(0);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.remove(0);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+        list.remove(0);
+        System.out.println("容器大小：" + list.capacity() + " -- 元素数量：" + list.length());
+    }
 }
