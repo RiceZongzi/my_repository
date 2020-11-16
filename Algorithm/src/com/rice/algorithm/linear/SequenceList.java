@@ -160,6 +160,10 @@ public class SequenceList<T> implements Iterable<T>{
         return result;
     }
 
+    public int capacity(){
+        return eles.length;
+    }
+
     /**
      * 查找t元素第一次出现的位置
      * @author wgz
