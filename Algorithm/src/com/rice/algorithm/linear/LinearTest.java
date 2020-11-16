@@ -26,4 +26,14 @@ public class LinearTest {
         list.clear();
         System.out.println("清空后的线性表中的元素个数为：" + list.length());
     }
+
+    @Test
+    public void sequenceListTest2() {
+        SequenceList<Integer> list = new SequenceList<>(4);
+        list.insert(0);
+        list.insert(1);
+        list.insert(2);
+
+        list.forEach(System.out::println);
+    }
 }

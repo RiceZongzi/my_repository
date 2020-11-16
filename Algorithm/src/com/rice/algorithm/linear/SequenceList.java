@@ -1,12 +1,15 @@
 package com.rice.algorithm.linear;
 
+import java.util.Iterator;
+
 /**
  * @author wgz
  * @description
  *      v1.0 基础API实现
+ *      v1.1 实现ForEach遍历
  * @date 2020/11/13 16:40
  */
-public class SequenceList<T> {
+public class SequenceList<T> implements Iterable<T>{
 
     /** 存储元素的Array */
     private T[] eles;
@@ -146,5 +149,29 @@ public class SequenceList<T> {
             }
         }
         return -1;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new SIterator();
+    }
+
+    private class SIterator implements Iterator {
+
+        private int cusor;
+
+        public SIterator(){
+            this.cusor = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cusor < n;
+        }
+
+        @Override
+        public Object next() {
+            return eles[cusor++];
+        }
     }
 }
