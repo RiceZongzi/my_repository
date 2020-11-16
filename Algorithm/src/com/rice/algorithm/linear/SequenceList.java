@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 /**
  * @author wgz
- * @description
+ * @description 顺序表
  *      v1.0 基础API实现
  *      v1.1 实现ForEach遍历
  *      v1.2 实现可变长度

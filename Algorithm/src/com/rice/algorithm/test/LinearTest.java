@@ -1,5 +1,6 @@
-package com.rice.algorithm.linear;
+package com.rice.algorithm.test;
 
+import com.rice.algorithm.linear.SequenceList;
 import org.junit.Test;
 
 /**
