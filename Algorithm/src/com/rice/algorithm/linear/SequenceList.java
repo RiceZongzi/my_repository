@@ -7,6 +7,7 @@ import java.util.Iterator;
  * @description
  *      v1.0 基础API实现
  *      v1.1 实现ForEach遍历
+ *      v1.2 实现可变长度
  * @date 2020/11/13 16:40
  */
 public class SequenceList<T> implements Iterable<T>{
@@ -80,10 +81,29 @@ public class SequenceList<T> implements Iterable<T>{
      * @param t T类型元素
      */
     public void insert(T t) {
+        // 元素已经放满了数组，需要扩容
         if (n == eles.length) {
-            throw new RuntimeException("当前表已满");
+//            throw new RuntimeException("当前表已满");
+            resize(2 * eles.length);
         }
         eles[n++] = t;
+    }
+
+    /**
+     * 根据参数newSize，重置eles的大小
+     * @author wgz
+     * @date 2020/11/16
+     * @param newSize 新size
+     */
+    public void resize(int newSize){
+        // 定义一个临时数组，指向原数组
+        T[] temp = eles;
+        // 创建新数组
+        eles = (T[]) new Object[newSize];
+        // 把原数组的数据拷贝到新数组即可
+        if (n >= 0) {
+            System.arraycopy(temp, 0, eles, 0, n);
+        }
     }
 
     /**
@@ -94,15 +114,17 @@ public class SequenceList<T> implements Iterable<T>{
      * @param t 元素
      */
     public void insert(int i,T t) {
+        // 元素已经放满了数组，需要扩容
         if (i == eles.length) {
-            throw new RuntimeException("当前表已满");
+//            throw new RuntimeException("当前表已满");
+            resize(2 * eles.length);
         }
         if (i < 0 || i > n) {
             throw new RuntimeException("插入的位置不合法");
         }
         // 把i位置空出来，i位置及其后面的元素依次向后移动一位
-        for (int index = n; index > i; index--) {
-            eles[index] = eles[index - 1];
+        if (n - i >= 0) {
+            System.arraycopy(eles, i, eles, i + 1, n - i);
         }
         // 把t放到i位置处
         eles[i] = t;
@@ -124,11 +146,17 @@ public class SequenceList<T> implements Iterable<T>{
         // 记录i位置处的元素
         T result = eles[i];
         // 把i位置后面的元素都向前移动一位
-        for (int index = i; index < n - 1; index++){
-            eles[index] = eles[index + 1];
+        if (n - 1 - i >= 0) {
+            System.arraycopy(eles, i + 1, eles, i, n - 1 - i);
         }
         // 当前元素数量-1
         n--;
+
+        // 当元素已经不足数组大小的1/4，则重置数组的大小
+        if (n < eles.length/4){
+            resize(eles.length/2);
+        }
+
         return result;
     }
 
