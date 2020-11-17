@@ -2,6 +2,7 @@ package com.rice.algorithm.test;
 
 import com.rice.algorithm.linear.LinkList;
 import com.rice.algorithm.linear.Node;
+import com.rice.algorithm.linear.TowWayLinkList;
 import org.junit.Test;
 
 /**
@@ -44,5 +45,10 @@ public class NodeTest {
         System.out.println("单向链表移除索引为1的元素为：" + linkList.remove(1));
         linkList.forEach(System.out::println);
         System.out.println("单向链表的长度为：" + linkList.length());
+    }
+
+    @Test
+    public void towWayLinkListTest() {
+        TowWayLinkList<String> towWayLinkList = new TowWayLinkList<>();
     }
 }

@@ -5,9 +5,9 @@ import java.util.Iterator;
 /**
  * @author wgz
  * @description 顺序表
- *      v1.0 基础API实现
- *      v1.1 实现ForEach遍历
- *      v1.2 实现可变长度
+ * @version v1.0 基础API实现
+ *          v1.1 实现ForEach遍历
+ *          v1.2 实现可变长度
  * @date 2020/11/13 16:40
  */
 public class SequenceList<T> implements Iterable<T>{

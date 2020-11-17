@@ -5,8 +5,9 @@ import java.util.Iterator;
 /**
  * @author wgz
  * @description 单向链表
- *      v1.0 基础API实现
- *      v1.1 实现链表反转
+ * @version v1.0 基础API实现
+ *          v1.1 实现链表反转
+ *          v1.2 Node改为内部类
  * @date 2020/11/16 19:06
  */
 public class LinkList<T> implements Iterable<T> {
@@ -16,6 +17,24 @@ public class LinkList<T> implements Iterable<T> {
 
     /** 记录链表的长度*/
     private int n;
+
+    /**
+     * 结点类
+     * @author wgz
+     * @date 2020/11/17
+     */
+    private class Node {
+        /** 存储数据*/
+        T item;
+
+        /** 下一个结点*/
+        Node next;
+
+        public Node(T item, Node next) {
+            this.item = item;
+            this.next = next;
+        }
+    }
 
     /**
      * 构造方法
@@ -90,8 +109,7 @@ public class LinkList<T> implements Iterable<T> {
         while(node.next != null){
             node = node.next;
         }
-        Node newNode = new Node(t, null);
-        node.next = newNode;
+        node.next = new Node(t, null);
         // 链表长度+1n
         n++;
     }
@@ -114,10 +132,8 @@ public class LinkList<T> implements Iterable<T> {
         }
         // 位置i的结点
         Node curr = pre.next;
-        // 构建新的结点，让新结点指向位置i的结点
-        Node newNode = new Node(t, curr);
-        // 让之前的结点指向新结点
-        pre.next = newNode;
+        // 构建新的结点，让新结点指向位置i的结点，让之前的结点指向新结点
+        pre.next = new Node(t, curr);
         // 长度+1
         n++;
     }
