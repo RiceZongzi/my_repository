@@ -8,7 +8,7 @@ import java.util.Iterator;
  * @description 双向链表
  * @date 2020/11/17 16:06
  */
-public class TowWayLinkList<T> implements Iterable{
+public class TwoWayLinkList<T> implements Iterable<T> {
 
     /** 首节点 */
     private Node head;
@@ -47,7 +47,7 @@ public class TowWayLinkList<T> implements Iterable{
      * @author wgz
      * @date 2020/11/17
      */
-    public TowWayLinkList() {
+    public TwoWayLinkList() {
         // 初始化头结点和尾结点
         this.head = new Node(null,null,null);
         this.last = null;
