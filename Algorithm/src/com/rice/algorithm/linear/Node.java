@@ -2,7 +2,7 @@ package com.rice.algorithm.linear;
 
 /**
  * @author wgz
- * @description 链表
+ * @description 链表节点类
  *      v1.0 基础API实现
  * @date 2020/11/16 18:59
  */
