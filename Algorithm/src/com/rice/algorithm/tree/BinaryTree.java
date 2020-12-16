@@ -87,7 +87,7 @@ public class BinaryTree<Key extends Comparable<Key>, Value> {
      * @param x
      * @param key
      * @param value
-     * @return com.rice.algorithm.tree.BinaryTree<Key                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                               Value>.Node
+     * @return com.rice.algorithm.tree.BinaryTree<Key, Value>.Node
      * @author wgz
      * @date 2020/12/3
      */
@@ -174,7 +174,7 @@ public class BinaryTree<Key extends Comparable<Key>, Value> {
      *
      * @param x
      * @param key
-     * @return com.rice.algorithm.tree.BinaryTree<Key                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                               Value>.Node
+     * @return com.rice.algorithm.tree.BinaryTree<Key, Value>.Node
      * @author wgz
      * @date 2020/12/9
      */
@@ -242,7 +242,7 @@ public class BinaryTree<Key extends Comparable<Key>, Value> {
      * 在指定树x中找出最小键所在的结点
      *
      * @param x
-     * @return com.rice.algorithm.tree.BinaryTree<Key               ,                               Value>.Node
+     * @return com.rice.algorithm.tree.BinaryTree<Key, Value>.Node
      * @author wgz
      * @date 2020/12/15
      */
@@ -273,7 +273,7 @@ public class BinaryTree<Key extends Comparable<Key>, Value> {
      * 在指定的树x中，找到最大的键所在的结点
      *
      * @param x
-     * @return com.rice.algorithm.tree.BinaryTree<Key                                                               ,                                                               Value>.Node
+     * @return com.rice.algorithm.tree.BinaryTree<Key, Value>.Node
      * @author wgz
      * @date 2020/12/15
      */
