@@ -111,12 +111,12 @@ public class Stack<T> implements Iterable<T>{
         private Node n;
 
         public SIterator(){
-            this.n=head;
+            this.n = head;
         }
 
         @Override
         public boolean hasNext() {
-            return n.next!=null;
+            return n.next != null;
         }
 
         @Override
