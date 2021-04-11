@@ -2,8 +2,7 @@ package com.rice.demo;
 
 import com.rice.thread.*;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @author wgz
@@ -30,7 +29,36 @@ public class ThreadDemo {
 //        method7();
 //        waitAndNotify1();
 //        waitAndNotify2();
-        method8();
+//        method8();
+        method9();
+    }
+
+    /**
+     * @author wgz
+     * create date 2021/4/11 21:22
+     * corePoolSize : 核心线程数
+     * maximumPoolSize ：最大线程数
+     * keepAliveTime : 最大存货时间
+     * unit : 时间单位
+     * workQueue ：等待队列
+     * threadFactory ：线程工厂
+     * handler : 处理策略
+     */
+    private static void method9() {
+        ExecutorService es = new ThreadPoolExecutor(
+                3,
+                5,
+                1L, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(3), // 等待队列的容量为3，即线程池的最大容量为8
+                Executors.defaultThreadFactory(), // 默认的线程池工厂
+                new ThreadPoolExecutor.AbortPolicy() // 策略为抛异常
+        );
+        for (int i = 0; i < 9; i++) {
+            es.execute(() -> {
+                System.out.println(Thread.currentThread().getName() + "办理业务");
+            });
+        }
+        es.shutdown();
     }
 
     /**
